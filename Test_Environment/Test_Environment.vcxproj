@@ -20,33 +20,33 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{FD5723F7-772C-4831-8B8B-E9DB1E5DCA3A}</ProjectGuid>
+    <ProjectGuid>{C17DE3E2-B0ED-4834-AEA7-0AA1AA384A67}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>My2D_Physics_Library</RootNamespace>
+    <RootNamespace>Test_Environment</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,27 +72,35 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\SFML-2.4.2\include;$(SolutionDir)2D_Physics_Library\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)externals\SFML-2.4.2\lib;$(SolutionDir)Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\jelme\Desktop\school\GraduationWork\Project\externals\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;2D_Physics_Library.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -140,22 +148,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Common\BaseTypes.h" />
-    <ClInclude Include="Include\Common\BlockAllocator.h" />
-    <ClInclude Include="Include\Common\Common.h" />
-    <ClInclude Include="Include\Common\Settings.h" />
-    <ClInclude Include="Include\Common\StackAllocator.h" />
-    <ClInclude Include="Include\Math\Math.h" />
-    <ClInclude Include="Include\Math\MathUtils.h" />
-    <ClInclude Include="Include\Math\Vec2.h" />
-    <ClInclude Include="Include\Physics2D.h" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="TestEnvironment.cpp" />
+    <ClCompile Include="Scenes\TestScene.cpp" />
+    <ClCompile Include="Utils\DrawContext.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Include\Math\Vec2.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Common\BlockAllocator.cpp" />
-    <ClCompile Include="Source\Common\StackAllocator.cpp" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="TestEnvironment.h" />
+    <ClInclude Include="Scenes\TestScene.h" />
+    <ClInclude Include="Utils\DrawContext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
