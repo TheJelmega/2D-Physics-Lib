@@ -13,6 +13,18 @@
 #	define P2D_ASSERT(x)
 #endif
 
+#define P2D_INL inline
+#ifdef _MSC_VER
+#	define P2D_FORCE_INL __forceinline // MSVC specific force inline
+#else
+#	define P2D_FORCE_INL inline __attribute__((always_inline)) // general force inline (non-MSVC)
+#endif
+
+
 // Macros can be used to change with external allocator
-#define P2D_ALLOCATE(size) malloc(size)
-#define P2D_FREE(ptr) free(ptr)
+#ifndef P2D_ALLOCATE
+#	define P2D_ALLOCATE(size) malloc(size)
+#endif
+#ifndef P2D_FREE
+#	define P2D_FREE(ptr) free(ptr)
+#endif

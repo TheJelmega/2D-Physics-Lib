@@ -42,9 +42,27 @@
     <ClInclude Include="Include\Common\BlockAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Physics\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Shapes\Shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\AABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Include\Math\Vec2.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Include\Math\AABB.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
@@ -53,6 +71,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\BlockAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Shapes\Shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

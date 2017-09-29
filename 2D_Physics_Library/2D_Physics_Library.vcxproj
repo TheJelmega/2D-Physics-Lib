@@ -145,17 +145,27 @@
     <ClInclude Include="Include\Common\Common.h" />
     <ClInclude Include="Include\Common\Settings.h" />
     <ClInclude Include="Include\Common\StackAllocator.h" />
+    <ClInclude Include="Include\Math\AABB.h" />
     <ClInclude Include="Include\Math\Math.h" />
     <ClInclude Include="Include\Math\MathUtils.h" />
     <ClInclude Include="Include\Math\Vec2.h" />
     <ClInclude Include="Include\Physics2D.h" />
+    <ClInclude Include="Include\Physics\Body.h" />
+    <ClInclude Include="Include\Physics\Material.h" />
+    <ClInclude Include="Include\Physics\Shapes\Shape.h" />
+    <ClInclude Include="Include\Physics\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Include\Math\AABB.inl" />
     <None Include="Include\Math\Vec2.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\BlockAllocator.cpp" />
     <ClCompile Include="Source\Common\StackAllocator.cpp" />
+    <ClCompile Include="Source\Physics\Body.cpp" />
+    <ClCompile Include="Source\Physics\Material.cpp" />
+    <ClCompile Include="Source\Physics\Shapes\Shape.cpp" />
+    <ClCompile Include="Source\Physics\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

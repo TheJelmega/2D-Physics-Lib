@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Utils/DrawContext.h"
+#include "Physics2D.h"
 
 class Scene
 {
@@ -15,6 +16,8 @@ public:
 	virtual void CleanUp();
 
 protected:
+
+	P2D::World m_PhysicsWorld;
 	
 };
 

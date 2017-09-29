@@ -42,7 +42,7 @@ namespace P2D {
 		}
 		++m_CurrentEntry;
 
-		return  m_Entries[m_CurrentEntry].pData;
+		return m_Entries[m_CurrentEntry].pData;
 	}
 
 	void StackAllocator::Deallocate(void* ptr)

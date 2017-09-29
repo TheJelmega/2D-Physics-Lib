@@ -167,3 +167,5 @@ namespace P2D {
 	Vec2<T> operator*(T val, const Vec2<T>& v);
 
 }
+
+typedef P2D::Vec2<f32> f32v2;
