@@ -11,11 +11,11 @@ SceneManager::~SceneManager()
 {
 }
 
-void SceneManager::Init()
+void SceneManager::Init(Context& context)
 {
 	for (Scene* pScene : m_pScenes)
 	{
-		pScene->Init();
+		pScene->Init(context);
 	}
 }
 

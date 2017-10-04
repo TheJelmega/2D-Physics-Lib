@@ -38,7 +38,7 @@ namespace P2D {
 
 	BlockAllocator::~BlockAllocator()
 	{
-		ChunkHeader* pChunk = reinterpret_cast<ChunkHeader*>(m_pData - sizeof(ChunkHeader));
+		ChunkHeader* pChunk = reinterpret_cast<ChunkHeader*>(m_pData);
 		ChunkHeader* pNext;
 		while (pChunk)
 		{

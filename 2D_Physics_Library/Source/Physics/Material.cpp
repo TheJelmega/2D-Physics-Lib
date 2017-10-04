@@ -7,6 +7,7 @@ namespace P2D {
 		: restitution(0.f)
 		, staticFriction(0.f)
 		, dynamicFriction(0.f)
+		, density(1.f)
 	{
 	}
 }

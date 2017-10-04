@@ -8,7 +8,7 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void Init();
+	void Init(Context& context);
 	void Update(sf::Time dt);
 	void UpdateEvent(const sf::Event& e);
 	void Draw(DrawContext& context);

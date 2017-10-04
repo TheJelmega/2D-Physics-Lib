@@ -7,7 +7,7 @@ public:
 	TestScene();
 	~TestScene();
 
-	void Init() override;
+	void Init(Context& context) override;
 	void Update(sf::Time dt) override;
 	void UpdateEvent(const sf::Event& evnt) override;
 	void Draw(DrawContext& context) override;
@@ -20,6 +20,8 @@ private:
 	int m_Frames = 0;
 
 	sf::CircleShape m_Circle;
+
+	P2D::Body* m_pBody;
 	
 };
 

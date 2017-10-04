@@ -19,6 +19,8 @@ namespace P2D {
 		BodyType type;
 		f32v2 position;
 		f32 angle;
+		bool active;
+		bool awake;
 
 		BodyDef();
 	};
@@ -32,10 +34,24 @@ namespace P2D {
 
 		void AddShape(Shape* pShape);
 
+		void ApplyForce(f32v2 force, bool wake = true);
+		void ApplyForce(f32v2 force, f32v2 point, bool wake = true);
+		void ApplyTorque(f32 torque, bool wake = true);
+
+		void ApplyImpulse(f32v2 impulse, bool wake = true);
+		void ApplyImpulse(f32v2 impulse, f32v2 point, bool wake = true);
+		void ApplyAngularImpulse(f32 impulse, bool wake = true);
+
 		P2D_FORCE_INL Body* GetNext() { return m_pNext; }
 		P2D_FORCE_INL const Body* GetNext() const { return m_pNext; }
 		P2D_FORCE_INL Body* GetPrev() { return m_pPrev; }
 		P2D_FORCE_INL const Body* GetPrev() const { return m_pPrev; }
+
+		void AddChild(Body* pChild);
+		P2D_FORCE_INL Body* GetChildren() { return m_pChild; }
+		P2D_FORCE_INL const Body* GetChildren() const { return m_pChild; }
+		P2D_FORCE_INL Body* GetParent() { return m_pParent; }
+		P2D_FORCE_INL const Body* GetParent() const { return m_pParent; }
 
 		P2D_FORCE_INL Shape* GetShapes() { return m_pShape; }
 		P2D_FORCE_INL const Shape* GetShapes() const { return m_pShape; }
@@ -48,12 +64,21 @@ namespace P2D {
 		P2D_FORCE_INL f32 GetAngularVelocity() const { return m_AngularVelocity; }
 		P2D_FORCE_INL f32v2 GetLinearDamping() const { return m_LinearDamping; }
 		P2D_FORCE_INL f32 GetAngularDamping() const { return m_AngularDamping; }
+
+		void SetAwake(bool awake);
+		P2D_FORCE_INL bool IsAwake() const { return m_Awake; }
+		void SetActive(bool active);
+		P2D_FORCE_INL bool IsActive() const { return m_Active; }
+
+		f32 GetMass();
 		
 	private:
 		friend class ::P2D::World;
 
 		Body* m_pNext;
 		Body* m_pPrev;
+		Body* m_pChild;
+		Body* m_pParent;
 
 		Shape* m_pShape;
 		u32 m_ShapeCount;
@@ -65,6 +90,9 @@ namespace P2D {
 		f32 m_AngularVelocity;
 		f32v2 m_LinearDamping;
 		f32 m_AngularDamping;
+
+		f32v2 m_Force;
+		f32 m_Torque;
 
 		bool m_Active;
 		bool m_Awake;

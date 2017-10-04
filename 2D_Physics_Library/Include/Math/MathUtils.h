@@ -15,6 +15,18 @@ namespace P2D { namespace Math {
 	template<typename T>
 	constexpr T Pi = T(Detail::Pi);
 
+	template<typename T>
+	T Min(T a, T b)
+	{
+		return a < b ? a : b;
+	}
+
+	template<typename T>
+	T Max(T a, T b)
+	{
+		return a > b ? a : b;
+	}
+
 	/**
 	 * Check if 2 values are equal
 	 */

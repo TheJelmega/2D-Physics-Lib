@@ -152,6 +152,7 @@
     <ClInclude Include="Include\Physics2D.h" />
     <ClInclude Include="Include\Physics\Body.h" />
     <ClInclude Include="Include\Physics\Material.h" />
+    <ClInclude Include="Include\Physics\Shapes\CircleShape.h" />
     <ClInclude Include="Include\Physics\Shapes\Shape.h" />
     <ClInclude Include="Include\Physics\World.h" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <ClCompile Include="Source\Common\StackAllocator.cpp" />
     <ClCompile Include="Source\Physics\Body.cpp" />
     <ClCompile Include="Source\Physics\Material.cpp" />
+    <ClCompile Include="Source\Physics\Shapes\CircleShape.cpp" />
     <ClCompile Include="Source\Physics\Shapes\Shape.cpp" />
     <ClCompile Include="Source\Physics\World.cpp" />
   </ItemGroup>

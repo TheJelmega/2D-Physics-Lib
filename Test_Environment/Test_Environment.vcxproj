@@ -162,6 +162,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TestEnvironment.h" />
     <ClInclude Include="Scenes\TestScene.h" />
+    <ClInclude Include="Utils\Context.h" />
     <ClInclude Include="Utils\DrawContext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

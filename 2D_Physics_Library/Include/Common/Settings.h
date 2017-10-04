@@ -2,6 +2,7 @@
 #pragma once
 #include <cassert>
 #include <memory>
+#include "Common/BaseTypes.h"
 
 #if defined(DEBUG) || defined(_DEBUG)
 #	define P2D_DEBUG
@@ -28,3 +29,11 @@
 #ifndef P2D_FREE
 #	define P2D_FREE(ptr) free(ptr)
 #endif
+
+// Settings
+namespace P2D {
+	
+
+	constexpr f32 g_MaxDeltaTime = 1.f / 30.f;
+
+}

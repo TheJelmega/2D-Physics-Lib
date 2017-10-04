@@ -11,6 +11,7 @@ namespace P2D {
 		f32 restitution;
 		f32 staticFriction;
 		f32 dynamicFriction;
+		f32 density;
 
 		Material();
 	};

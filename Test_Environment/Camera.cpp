@@ -3,6 +3,8 @@
 
 
 Camera::Camera() : m_WasDown(false)
+                 , m_Zoom(1.f)
+                 , m_ZoomStep(.5f)
 {
 }
 
@@ -41,7 +43,21 @@ bool Camera::UpdateEvent(const sf::Event& evnt)
 			m_View.move(-delta);
 			m_PrevMousePos = curMousePos;
 		}
-		
+	}
+	else if (evnt.type == sf::Event::MouseWheelScrolled)
+	{
+		if (evnt.mouseWheelScroll.delta > 0)
+		{
+			m_Zoom -= m_ZoomStep;
+			if (m_Zoom < 1.f)
+				m_Zoom = 1.f;
+			m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
+		}
+		else if (evnt.mouseWheelScroll.delta < 0)
+		{
+			m_Zoom += m_ZoomStep;
+			m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
+		}
 	}
 
 	return false;
@@ -54,6 +70,13 @@ void Camera::Draw(sf::RenderWindow& window)
 
 void Camera::SetScreenSize(int width, int height)
 {
-	m_View.setSize(float(width), float(height));
-	m_View.setCenter(float(width) / 2, float(height) / 2);
+	m_ScreenSize = sf::Vector2i(width, height);
+	m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
+	m_View.setCenter(0, 0);
+}
+
+void Camera::SetZoom(float zoom)
+{
+	m_Zoom = zoom < 1.f ? 1.f : zoom;
+	m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
 }

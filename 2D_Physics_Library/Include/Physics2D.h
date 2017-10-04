@@ -6,3 +6,7 @@
 
 
 #include "Physics/World.h"
+#include "Physics/Body.h"
+#include "Physics/Shapes/Shape.h"
+#include "Physics/Shapes/CircleShape.h"
+#include "Physics/Material.h"
