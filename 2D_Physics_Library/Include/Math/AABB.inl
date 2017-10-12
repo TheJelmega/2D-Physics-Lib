@@ -39,6 +39,23 @@ namespace P2D {
 		return *this;
 	}
 
+	P2D_INL void AABB::Move(const f32v2& v)
+	{
+		min += v;
+		max += v;
+	}
+
+	P2D_INL void AABB::Combine(const AABB& aabb)
+	{
+		min = Math::Min(min, aabb.min);
+		max = Math::Max(max, aabb.max);
+	}
+
+	P2D_INL bool AABB::Overlaps(const AABB& aabb) const
+	{
+		return min <= aabb.max && max >= aabb.min;
+	}
+
 	P2D_INL void AABB::Pad(f32 value)
 	{
 		min -= value;

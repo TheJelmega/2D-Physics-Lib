@@ -10,13 +10,13 @@ namespace P2D {
 	{
 	}
 
-	Body::Body(const BodyDef& def)
+	Body::Body(const BodyDef& def, World* pWorld)
 		: m_pNext(nullptr)
 		, m_pPrev(nullptr)
-		, m_pChild(nullptr)
-		, m_pParent(nullptr)
+		, m_pWorld(pWorld)
 		, m_pShape(nullptr)
 		, m_ShapeCount(0)
+		, m_pContactList(nullptr)
 		, m_Type(def.type)
 		, m_Position(def.position)
 		, m_Angle(def.angle)
@@ -25,7 +25,6 @@ namespace P2D {
 		, m_Torque(0.f)
 		, m_Active(def.active)
 		, m_Awake(def.awake)
-
 	{
 	}
 
@@ -38,61 +37,121 @@ namespace P2D {
 		if (m_pShape)
 			pShape->m_pNext = m_pShape;
 		m_pShape = pShape;
+		pShape->m_pBody = this;
+		pShape->UpdateAABB();
+		m_AABB.Combine(pShape->m_AABB);
+		++m_ShapeCount;
+
+		//Update mass data
+		f32v2 tempCenterOfMass = m_MassData.mass * m_MassData.centerOfMass + pShape->m_MassData.mass * pShape->m_MassData.centerOfMass;
+		m_MassData.mass += pShape->m_MassData.mass;
+		m_MassData.centerOfMass = tempCenterOfMass / m_MassData.mass;
+		m_MassData.inertia += pShape->m_MassData.inertia;
 	}
 
 	void Body::ApplyForce(f32v2 force, bool wake)
 	{
+		if (m_Type != BodyType::Dynamic)
+			return;
+
+		if (wake)
+			SetAwake(true);
+
+		//Only apply force when awake
+		if (m_Awake)
+			m_Force += force;
 	}
 
 	void Body::ApplyForce(f32v2 force, f32v2 point, bool wake)
 	{
+		if (m_Type != BodyType::Dynamic)
+			return;
+
+		if (wake)
+			SetAwake(true);
+
+		//Only apply force when awake
+		if (m_Awake)
+		{
+			m_Force += force;
+			m_Torque += (point - m_Position).Cross(force);
+		}
 	}
 
 	void Body::ApplyTorque(f32 torque, bool wake)
 	{
+		if (m_Type != BodyType::Dynamic)
+			return;
+
+		if (wake)
+			SetAwake(true);
+
+		//Only apply torque when awake
+		if (m_Awake)
+			m_Torque += torque;
 	}
 
 	void Body::ApplyImpulse(f32v2 impulse, bool wake)
 	{
-		f32 mass = GetMass();
-		m_LinearVelocity += impulse / mass;
+		if (m_Type != BodyType::Dynamic)
+			return;
 
 		if (wake)
 			SetAwake(true);
+
+		//Only apply impulse when awake
+		if (m_Awake)
+		{
+			m_LinearVelocity += impulse / m_MassData.mass;
+		}
 	}
 
 	void Body::ApplyImpulse(f32v2 impulse, f32v2 point, bool wake)
 	{
+		if (m_Type != BodyType::Dynamic)
+			return;
+
+		if (wake)
+			SetAwake(true);
+
+		//Only apply impulse when awake
+		if (m_Awake)
+		{
+			m_LinearVelocity += impulse / m_MassData.mass;
+			f32 torque = (point - m_Position).Cross(impulse);
+			m_AngularVelocity += torque / m_MassData.inertia;
+		}
 	}
 
 	void Body::ApplyAngularImpulse(f32 impulse, bool wake)
 	{
+		if (m_Type != BodyType::Dynamic)
+			return;
+
+		if (wake)
+			SetAwake(true);
+
+		//Only apply impulse when awake
+		if (m_Awake)
+		{
+			m_AngularVelocity += impulse / m_MassData.inertia;
+		}
 	}
 
-	void Body::AddChild(Body* pChild)
+	void Body::UpdateAABB()
 	{
-		if (m_pChild)
+		if (!m_pShape)
 		{
-			pChild->m_pNext = m_pChild;
-			m_pChild->m_pPrev = pChild;
+			m_AABB.min = m_AABB.max = f32v2::Zero;
+			return;
 		}
-		else
+		m_pShape->UpdateAABB();
+		m_AABB = m_pShape->m_AABB;
+		for (Shape* pShape = m_pShape->m_pNext; pShape; pShape = pShape->m_pNext)
 		{
-			pChild->m_pNext = nullptr;
+			pShape->UpdateAABB();
+			m_AABB.Combine(pShape->m_AABB);
 		}
-		pChild->m_pPrev = nullptr;
-		pChild->m_pParent = this;
-		m_pChild = pChild;
-	}
-
-	f32 Body::GetMass()
-	{
-		f32 mass = 0.f;
-		for (Shape* pShape = m_pShape; pShape; pShape = pShape->m_pNext)
-		{
-			mass += pShape->m_Mass;
-		}
-		return mass;
 	}
 
 	void Body::SetAwake(bool awake)
@@ -103,5 +162,6 @@ namespace P2D {
 
 	void Body::SetActive(bool active)
 	{
+		m_Active = active;
 	}
 }

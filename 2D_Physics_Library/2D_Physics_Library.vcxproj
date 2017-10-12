@@ -87,7 +87,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -148,9 +148,20 @@
     <ClInclude Include="Include\Math\AABB.h" />
     <ClInclude Include="Include\Math\Math.h" />
     <ClInclude Include="Include\Math\MathUtils.h" />
+    <ClInclude Include="Include\Math\Transform.h" />
     <ClInclude Include="Include\Math\Vec2.h" />
     <ClInclude Include="Include\Physics2D.h" />
     <ClInclude Include="Include\Physics\Body.h" />
+    <ClInclude Include="Include\Physics\BroadPhase.h" />
+    <ClInclude Include="Include\Physics\Collision.h" />
+    <ClInclude Include="Include\Physics\CollisionSolver.h" />
+    <ClInclude Include="Include\Physics\Contacts\CircleContact.h" />
+    <ClInclude Include="Include\Physics\Contacts\Contact.h" />
+    <ClInclude Include="Include\Physics\Contacts\ContactFilter.h" />
+    <ClInclude Include="Include\Physics\Contacts\ContactManager.h" />
+    <ClInclude Include="Include\Physics\Contacts\ContactSolver.h" />
+    <ClInclude Include="Include\Physics\EventListener.h" />
+    <ClInclude Include="Include\Physics\Manifold.h" />
     <ClInclude Include="Include\Physics\Material.h" />
     <ClInclude Include="Include\Physics\Shapes\CircleShape.h" />
     <ClInclude Include="Include\Physics\Shapes\Shape.h" />
@@ -158,12 +169,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Include\Math\AABB.inl" />
+    <None Include="Include\Math\Transform.inl" />
     <None Include="Include\Math\Vec2.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\BlockAllocator.cpp" />
     <ClCompile Include="Source\Common\StackAllocator.cpp" />
     <ClCompile Include="Source\Physics\Body.cpp" />
+    <ClCompile Include="Source\Physics\BroadPhase.cpp" />
+    <ClCompile Include="Source\Physics\Collision.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\CircleContact.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\Contact.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\ContactFilter.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\ContactManager.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\ContactSolver.cpp" />
+    <ClCompile Include="Source\Physics\EventListener.cpp" />
     <ClCompile Include="Source\Physics\Material.cpp" />
     <ClCompile Include="Source\Physics\Shapes\CircleShape.cpp" />
     <ClCompile Include="Source\Physics\Shapes\Shape.cpp" />

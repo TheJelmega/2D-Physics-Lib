@@ -199,6 +199,18 @@ namespace P2D {
 	}
 
 	template <typename T>
+	T Vec2<T>::Distance(const Vec2& v)
+	{
+		return (v - *this).Length();
+	}
+
+	template <typename T>
+	T Vec2<T>::SqDistance(const Vec2& v)
+	{
+		return (v - *this).SqLength();
+	}
+
+	template <typename T>
 	T Vec2<T>::Dot(const Vec2& v) const
 	{
 		return x * v.x + y * v.y;
@@ -208,6 +220,12 @@ namespace P2D {
 	T Vec2<T>::Cross(const Vec2& v) const
 	{
 		return x * v.y - y * v.x;
+	}
+
+	template <typename T>
+	Vec2<T> Vec2<T>::Cross(T val)
+	{
+		return Vec2(-y * val, x * val);
 	}
 
 	template <typename T>
@@ -284,6 +302,30 @@ namespace P2D {
 	bool Vec2<T>::operator!=(const Vec2& v) const
 	{
 		return x != v.x || y != v.y;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator<(const Vec2& v) const
+	{
+		return x < v.x && y < v.y;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator<=(const Vec2& v) const
+	{
+		return x <= v.x && y <= v.y;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator>(const Vec2& v) const
+	{
+		return x > v.x && y > v.y;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator>=(const Vec2& v) const
+	{
+		return x >= v.x && y >= v.y;
 	}
 
 	template <typename T>

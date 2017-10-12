@@ -24,12 +24,12 @@ namespace P2D {
 			{
 				if ((i + 1) * 16 <= m_BlockSizes[j])
 				{
-					m_BlockLookup[i] = j;
+					m_BlockLookup[i] = u8(j);
 				}
 				else
 				{
 					++j;
-					m_BlockLookup[i] = j;
+					m_BlockLookup[i] = u8(j);
 				}
 			}
 			m_IsLookupInitialzed = true;
@@ -90,8 +90,6 @@ namespace P2D {
 			return m_pData + pNewChunk->index + sizeof(ChunkHeader);
 
 		}
-
-		return nullptr;
 	}
 
 	void BlockAllocator::Deallocate(void* ptr, size_t size)

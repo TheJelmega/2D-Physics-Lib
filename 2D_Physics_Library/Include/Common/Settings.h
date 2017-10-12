@@ -36,4 +36,6 @@ namespace P2D {
 
 	constexpr f32 g_MaxDeltaTime = 1.f / 30.f;
 
+	constexpr u32 g_MaxManifoldPoints = 4;
+
 }

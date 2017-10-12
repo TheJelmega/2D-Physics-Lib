@@ -22,6 +22,7 @@ private:
 	sf::CircleShape m_Circle;
 
 	P2D::Body* m_pBody;
+	P2D::Body* m_StaticBody;
 	
 };
 

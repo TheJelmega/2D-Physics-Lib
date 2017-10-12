@@ -1,13 +1,21 @@
 #include "Physics/Shapes/CircleShape.h"
+#include "Physics/Body.h"
 
 namespace P2D {
 
-	CircleShape::CircleShape(const CircleShapeDef& def)
-		: Shape(Type::Circle, def.material)
-		, m_Radius(def.radius)
+	CircleShapeDef::CircleShapeDef()
+		: ShapeDef()
+		, radius(0)
 	{
-		m_Mass = Math::Pi<f32> * m_Radius * m_Radius * m_Material.density;
+	}
 
+	CircleShape::CircleShape(const CircleShapeDef& def)
+		: Shape(Type::Circle, def)
+	{
+		m_Radius = def.radius;
+		m_MassData.area = m_Radius * m_Radius * Math::Pi<f32>;
+		//m_MassData.centerOfMass = f32v2::Zero;
+		CircleShape::UpdateMass();
 	}
 
 	CircleShape::~CircleShape()
@@ -16,12 +24,33 @@ namespace P2D {
 
 	void CircleShape::UpdateMass()
 	{
-		m_Mass = m_Material.density * m_Radius * m_Radius * Math::Pi<f32>;
+		m_MassData.mass = m_Material.density * m_MassData.area;
+		m_MassData.inertia = m_MassData.mass * (.5f * m_Radius * m_Radius + m_MassData.centerOfMass.SqLength());
 	}
 
 	void CircleShape::SetMass(f32 mass)
 	{
-		m_Mass = mass;
-		m_Material.density = mass / (m_Radius * m_Radius * Math::Pi<f32>);
+		m_MassData.mass = mass;
+		m_Material.density = mass / m_MassData.area;
+		m_MassData.inertia = mass * (0.5f * m_Radius * m_Radius + m_MassData.centerOfMass.SqLength());
+	}
+
+	void CircleShape::SetRelPosition(const f32v2& relPos)
+	{
+		m_RelPos = relPos;
+		m_MassData.centerOfMass = relPos;
+	}
+
+	void CircleShape::UpdateAABB()
+	{
+		f32v2 pos = m_pBody->m_Transform.Move(m_RelPos);
+		m_AABB.min = pos - m_Radius;
+		m_AABB.max = pos + m_Radius;
+	}
+
+	AABB CircleShape::GetAABBAt(const Transform& transform)
+	{
+		f32v2 pos = transform.Move(m_RelPos);
+		return AABB(pos - m_Radius, pos + m_Radius);
 	}
 }

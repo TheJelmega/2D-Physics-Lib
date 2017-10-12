@@ -51,7 +51,7 @@ void DrawContext::Draw(P2D::Body* pBody, P2D::CircleShape* pShape) const
 	sf::CircleShape circle;
 	f32 radius = pShape->GetRadius() * m_PhysicsRenderScale;
 	circle.setRadius(radius);
-	f32v2 pos = pBody->GetPosition() * m_PhysicsRenderScale;
+	f32v2 pos = (pBody->GetPosition() + pShape->GetRelPosition().Rotated(pBody->GetAngle())) * m_PhysicsRenderScale;
 	pos.y = -pos.y;
 	pos -= radius;
 	circle.setPosition(pos.x, pos.y);

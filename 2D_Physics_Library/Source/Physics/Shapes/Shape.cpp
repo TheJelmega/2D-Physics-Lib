@@ -3,18 +3,42 @@
 namespace P2D {
 
 
-	Shape::Shape()
-		: m_pNext(nullptr)
-		, m_Type(Type::None)
-		, m_Mass(0)
+	MassData::MassData()
+		: mass(0)
+		, inertia(0)
+		, area(0)
 	{
 	}
 
-	Shape::Shape(Type type, const Material& mat)
+	CollisionFilter::CollisionFilter()
+		: category(0x0001)
+	    , collisionMask(0xFFFF)
+	    , group(0)
+	{
+	}
+
+	ShapeDef::ShapeDef()
+		: isSensor(false)
+	{
+	}
+
+	Shape::Shape()
 		: m_pNext(nullptr)
+		, m_pBody(nullptr)
+		, m_Type(Type::None)
+		, m_Sensor(false)
+		, m_Radius(0)
+	{
+	}
+
+	Shape::Shape(Type type, const ShapeDef& def)
+		: m_pNext(nullptr)
+		, m_pBody(nullptr)
 		, m_Type(type)
-		, m_Material(mat)
-		, m_Mass(0)
+		, m_Material(def.material)
+		, m_RelPos(def.relpos)
+		, m_Filter(def.collisionFilter)
+		, m_Sensor(def.isSensor)
 	{
 	}
 
@@ -28,5 +52,16 @@ namespace P2D {
 
 	void Shape::SetMass(f32 mass)
 	{
+		m_MassData.mass = mass;
+	}
+
+	void Shape::UpdateAABB()
+	{
+	}
+
+	AABB Shape::GetAABBAt(const Transform& transform)
+	{
+		(void)transform;
+		return AABB();
 	}
 }

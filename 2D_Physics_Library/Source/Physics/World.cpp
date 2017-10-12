@@ -1,20 +1,30 @@
 #include "Physics/World.h"
+#include <iostream>
+#include "Physics/Contacts/ContactSolver.h"
 
 namespace P2D {
 
 	World::World()
 		: m_Dt(0)
-		, m_Timestep(1.f/30.f)
+		, m_Timestep(1.f / 30.f)
+		, m_AutoClearForces(true)
 		, m_Gravity(0, -9.81)
 		, m_pBodyList(nullptr)
 		, m_BodyCount(0)
 	{
+		m_pBroadPhase = new BroadPhase(this);
+		m_pContactManager = new ContactManager(this);
+	}
+
+	World::~World()
+	{
+		delete m_pBroadPhase;
 	}
 
 	Body* World::CreateBody(const BodyDef& def)
 	{
 		Body* pBody = static_cast<Body*>(m_Allocator.Allocate(sizeof(Body)));
-		new (pBody) Body(def);
+		new (pBody) Body(def, this);
 
 		if (m_pBodyList)
 		{
@@ -31,10 +41,6 @@ namespace P2D {
 	void World::DestroyBody(Body* pBody)
 	{
 		//TODO: Delete joint / constraints
-
-		//Delete children
-		for (Body* pChild = pBody->m_pChild; pChild; pChild = pChild->m_pNext)
-			DestroyBody(pChild);
 
 		//Delete shapes
 		for (Shape* pShape = pBody->GetShapes(); pShape; pShape = pShape->GetNext())
@@ -56,6 +62,8 @@ namespace P2D {
 			pBody->m_pNext->m_pPrev = pBody->m_pPrev;
 		if (pBody->m_pPrev)
 			pBody->m_pPrev->m_pNext = pBody->m_pNext;
+		if (m_pBodyList == pBody)
+			m_pBodyList = pBody->m_pNext;
 
 		//Delete body
 		pBody->~Body();
@@ -84,7 +92,9 @@ namespace P2D {
 		{
 			Step(m_Timestep);
 		}
-		ClearBodyForces();
+
+		if (m_AutoClearForces)
+			ClearBodyForces();
 	}
 
 	void World::Step(f32 timestep)
@@ -92,7 +102,15 @@ namespace P2D {
 		//Prepare solver (disgarding inactive objects, static objects, ...)
 
 		IntegrateVelocity(timestep);
+
+		m_pBroadPhase->UpdatePairs(m_pContactManager);
+		m_pContactManager->UpdateCollisions();
+
+		ContactSolver solver;
+		solver.SolveVelocity(timestep);
+
 		IntegratePosition(timestep);
+		solver.SolvePosition(timestep);
 	}
 
 	void World::ClearBodyForces()
@@ -111,8 +129,12 @@ namespace P2D {
 			if (!pBody->m_Active || !pBody->m_Awake || pBody->m_Type == BodyType::Static)
 				continue;
 
-			// simple gravity
+			// linear velocity
 			pBody->m_LinearVelocity += m_Gravity * timestep;
+			pBody->m_LinearVelocity += pBody->m_Force / pBody->m_MassData.mass * timestep;
+
+			// angular velocity
+			pBody->m_AngularVelocity += pBody->m_Torque / pBody->m_MassData.inertia * timestep;
 		}
 	}
 
@@ -123,8 +145,9 @@ namespace P2D {
 			if (!pBody->m_Active || !pBody->m_Awake || pBody->m_Type == BodyType::Static)
 				continue;
 
-			// simple movement
 			pBody->m_Position += pBody->m_LinearVelocity * timestep;
+			pBody->m_Angle += pBody->m_AngularVelocity * timestep;
+			pBody->UpdateAABB();
 		}
 	}
 

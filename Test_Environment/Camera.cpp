@@ -20,7 +20,9 @@ void Camera::Update(sf::Time dt)
 
 bool Camera::UpdateEvent(const sf::Event& evnt)
 {
-	if (evnt.type == sf::Event::MouseButtonPressed)
+	switch (evnt.type)
+	{
+	case sf::Event::MouseButtonPressed:
 	{
 		if (evnt.mouseButton.button == sf::Mouse::Middle)
 		{
@@ -29,12 +31,13 @@ bool Camera::UpdateEvent(const sf::Event& evnt)
 			return true;
 		}
 	}
-	else if (evnt.type == sf::Event::MouseButtonReleased)
+	case sf::Event::MouseButtonReleased:
 	{
 		if (evnt.mouseButton.button == sf::Mouse::Button::Middle)
 			m_WasDown = false;
+		return false;
 	}
-	else if (evnt.type == sf::Event::MouseMoved)
+	case sf::Event::MouseMoved:
 	{
 		if (m_WasDown)
 		{
@@ -43,8 +46,9 @@ bool Camera::UpdateEvent(const sf::Event& evnt)
 			m_View.move(-delta);
 			m_PrevMousePos = curMousePos;
 		}
+		return false;
 	}
-	else if (evnt.type == sf::Event::MouseWheelScrolled)
+	case sf::Event::MouseWheelScrolled:
 	{
 		if (evnt.mouseWheelScroll.delta > 0)
 		{
@@ -58,9 +62,12 @@ bool Camera::UpdateEvent(const sf::Event& evnt)
 			m_Zoom += m_ZoomStep;
 			m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
 		}
+		return false;
 	}
 
-	return false;
+	default:
+		return false;
+	}
 }
 
 void Camera::Draw(sf::RenderWindow& window)

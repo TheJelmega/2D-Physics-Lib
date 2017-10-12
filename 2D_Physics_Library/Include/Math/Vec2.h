@@ -71,6 +71,15 @@ namespace P2D {
 		T SqLength() const;
 
 		/**
+		 * Get the distance between 2 vectors
+		 */
+		T Distance(const Vec2& v);
+		/**
+		 * Get the square distance between 2 vectors
+		 */
+		T SqDistance(const Vec2& v);
+
+		/**
 		 * Get the dot product of 2 vectors
 		 * @param[in] v	Vec2
 		 */
@@ -79,6 +88,10 @@ namespace P2D {
 		 * Get the 2D cross product of 2 vector
 		 */
 		T Cross(const Vec2& v) const;
+		/**
+		 * Get the 2D cross product of a vector and a scalar (Z-axis)
+		 */
+		Vec2 Cross(T val);
 
 		/**
 		 * Get the normalized version of the vector
@@ -118,6 +131,10 @@ namespace P2D {
 
 		bool operator==(const Vec2& v) const;
 		bool operator!=(const Vec2& v) const;
+		bool operator<(const Vec2& v) const;
+		bool operator<=(const Vec2& v) const;
+		bool operator>(const Vec2& v) const;
+		bool operator>=(const Vec2& v) const;
 		/**
 		 * Check if 2 vectors are the same
 		 * @param[in] v	Vec2

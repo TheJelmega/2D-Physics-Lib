@@ -4,10 +4,13 @@
 
 namespace P2D {
 	
-	struct CircleShapeDef
+	struct Collsion;
+
+	struct CircleShapeDef : ShapeDef
 	{
-		Material material;
 		f32 radius;
+
+		CircleShapeDef();
 	};
 
 	class CircleShape : public Shape
@@ -20,8 +23,11 @@ namespace P2D {
 
 		void UpdateMass() override;
 		void SetMass(f32 mass) override;
+		void SetRelPosition(const f32v2& relPos) override;
+		void UpdateAABB() override;
+		AABB GetAABBAt(const Transform& transform) override;
 	private:
-		f32 m_Radius;
+		friend struct Collision;
 	};
 
 }
