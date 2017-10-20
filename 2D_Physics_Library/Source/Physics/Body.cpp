@@ -2,6 +2,14 @@
 
 namespace P2D {
 
+	BodyMassData::BodyMassData()
+		: mass(0)
+		, invMass(0)
+		, inertia(0)
+		, invInertia(0)
+	{
+	}
+
 	BodyDef::BodyDef()
 		: type(BodyType::Dynamic)
 		, angle(0.f)
@@ -20,12 +28,20 @@ namespace P2D {
 		, m_Type(def.type)
 		, m_Position(def.position)
 		, m_Angle(def.angle)
-		, m_AngularVelocity(0.f)
-		, m_AngularDamping(0.f)
+		, m_Velocity()
 		, m_Torque(0.f)
+		, m_SolverIndex(-1)
 		, m_Active(def.active)
 		, m_Awake(def.awake)
+		, m_InSolver(false)
 	{
+		if (m_Type == BodyType::Static)
+		{
+			m_MassData.mass = g_StaticMass;
+			m_MassData.invMass = 0.f;
+			m_MassData.inertia = g_StaticInertia;
+			m_MassData.invInertia = 0.f;
+		}
 	}
 
 	Body::~Body()
@@ -34,6 +50,11 @@ namespace P2D {
 
 	void Body::AddShape(Shape* pShape)
 	{
+		if (pShape->m_Type == Shape::Type::Edge || pShape->m_Type == Shape::Type::Chain)
+		{
+			P2D_ASSERT(m_Type == BodyType::Static);
+		}
+
 		if (m_pShape)
 			pShape->m_pNext = m_pShape;
 		m_pShape = pShape;
@@ -42,11 +63,16 @@ namespace P2D {
 		m_AABB.Combine(pShape->m_AABB);
 		++m_ShapeCount;
 
-		//Update mass data
-		f32v2 tempCenterOfMass = m_MassData.mass * m_MassData.centerOfMass + pShape->m_MassData.mass * pShape->m_MassData.centerOfMass;
-		m_MassData.mass += pShape->m_MassData.mass;
-		m_MassData.centerOfMass = tempCenterOfMass / m_MassData.mass;
-		m_MassData.inertia += pShape->m_MassData.inertia;
+		//Update mass data, if not static
+		if (m_Type != BodyType::Static)
+		{
+			f32v2 tempCenterOfMass = m_MassData.mass * m_MassData.centerOfMass + pShape->m_MassData.mass * pShape->m_MassData.centerOfMass;
+			m_MassData.mass += pShape->m_MassData.mass;
+			m_MassData.invMass = 1.f / m_MassData.mass;
+			m_MassData.centerOfMass = tempCenterOfMass / m_MassData.mass;
+			m_MassData.inertia += pShape->m_MassData.inertia;
+			m_MassData.invInertia = 1.f / m_MassData.inertia;
+		}
 	}
 
 	void Body::ApplyForce(f32v2 force, bool wake)
@@ -102,7 +128,7 @@ namespace P2D {
 		//Only apply impulse when awake
 		if (m_Awake)
 		{
-			m_LinearVelocity += impulse / m_MassData.mass;
+			m_LinearVelocity += impulse * m_MassData.invMass;
 		}
 	}
 
@@ -117,9 +143,9 @@ namespace P2D {
 		//Only apply impulse when awake
 		if (m_Awake)
 		{
-			m_LinearVelocity += impulse / m_MassData.mass;
+			m_LinearVelocity += impulse * m_MassData.invMass;
 			f32 torque = (point - m_Position).Cross(impulse);
-			m_AngularVelocity += torque / m_MassData.inertia;
+			m_AngularVelocity += torque * m_MassData.invInertia;
 		}
 	}
 
@@ -134,7 +160,7 @@ namespace P2D {
 		//Only apply impulse when awake
 		if (m_Awake)
 		{
-			m_AngularVelocity += impulse / m_MassData.inertia;
+			m_AngularVelocity += impulse * m_MassData.invInertia;
 		}
 	}
 

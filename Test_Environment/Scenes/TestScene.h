@@ -19,10 +19,12 @@ private:
 	float m_TimePassed = 0.f;
 	int m_Frames = 0;
 
-	sf::CircleShape m_Circle;
+	/*sf::CircleShape m_Circle;
 
 	P2D::Body* m_pBody;
-	P2D::Body* m_StaticBody;
+	P2D::Body *m_pStaticBody0, *m_pStaticBody1;*/
+
+	bool m_UpdatePhysics = false;
 	
 };
 

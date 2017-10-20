@@ -39,6 +39,7 @@ namespace P2D {
 	{
 		m_RelPos = relPos;
 		m_MassData.centerOfMass = relPos;
+		m_pBody->UpdateAABB();
 	}
 
 	void CircleShape::UpdateAABB()
@@ -46,11 +47,6 @@ namespace P2D {
 		f32v2 pos = m_pBody->m_Transform.Move(m_RelPos);
 		m_AABB.min = pos - m_Radius;
 		m_AABB.max = pos + m_Radius;
-	}
-
-	AABB CircleShape::GetAABBAt(const Transform& transform)
-	{
-		f32v2 pos = transform.Move(m_RelPos);
-		return AABB(pos - m_Radius, pos + m_Radius);
+		m_AABB.Pad(g_AABBExtension);
 	}
 }

@@ -12,4 +12,8 @@ namespace P2D {
 		return position + relpos.Rotated(rotation);
 	}
 
+	P2D_INL Velocity::Velocity() : angularVelocity(0)
+	{
+	}
+
 }

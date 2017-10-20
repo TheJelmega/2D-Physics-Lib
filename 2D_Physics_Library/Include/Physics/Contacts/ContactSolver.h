@@ -3,20 +3,18 @@
 
 namespace P2D {
 	
-	class ContactManager;
+	class PhysicsSolver;
 
 	class ContactSolver
 	{
 	public:
-		ContactSolver();
+		ContactSolver(PhysicsSolver* pPhysicsSolver);
 
 		void SolveVelocity(f32 dt);
 		void SolvePosition(f32 dt);
 
 	private:
+		PhysicsSolver* m_pPhysicsSolver;
 
-		
-
-		ContactManager* m_pContactManager;
 	};
 }

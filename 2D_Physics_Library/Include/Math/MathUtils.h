@@ -45,4 +45,20 @@ namespace P2D { namespace Math {
 		return abs(a - b) < epsilon;
 	}
 
+	template<typename T>
+	T Clamp(T val, T min, T max)
+	{
+		if (val < min)
+			return min;
+		if (val > max)
+			return max;
+		return val;
+	}
+
+	template<typename T>
+	T ToRadians(T degrees)
+	{
+		return degrees * Pi<f32> / T(180.f);
+	}
+
 } }

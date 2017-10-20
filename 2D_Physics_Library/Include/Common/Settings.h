@@ -33,9 +33,24 @@
 // Settings
 namespace P2D {
 	
-
+	/**Maximum amount of time to update after program has paused*/
 	constexpr f32 g_MaxDeltaTime = 1.f / 30.f;
 
-	constexpr u32 g_MaxManifoldPoints = 4;
+	/**Maximum amount of mnaifold points*/
+	constexpr u32 g_MaxManifoldPairs = 4;
+
+	/**Mass of a static object*/
+	constexpr f32 g_StaticMass = (std::numeric_limits<f32>::max)();
+	/**Inertia of static object*/
+	constexpr f32 g_StaticInertia = (std::numeric_limits<f32>::max)();
+
+	/**small length used as collision and constraint tollerance*/
+	constexpr f32 g_LinearSlop = 0.005f;
+
+	/**skin whtickness of polyogns/edges*/
+	constexpr f32 g_SkinThickness = 2.f * g_LinearSlop;
+
+	/**value to fatten AABB with*/
+	constexpr f32 g_AABBExtension = 0.1f;
 
 }

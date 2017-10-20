@@ -223,7 +223,7 @@ namespace P2D {
 	}
 
 	template <typename T>
-	Vec2<T> Vec2<T>::Cross(T val)
+	Vec2<T> Vec2<T>::Cross(T val) const
 	{
 		return Vec2(-y * val, x * val);
 	}
@@ -245,6 +245,12 @@ namespace P2D {
 			return *this;
 		*this *= (T(1) / sqrt(l));
 		return *this;
+	}
+
+	template <typename T>
+	Vec2<T> Vec2<T>::Lerp(const Vec2& v, T factor) const
+	{
+		return *this + (v - *this) * factor;
 	}
 
 	template <typename T>
@@ -284,12 +290,6 @@ namespace P2D {
 		if (cross >= 0)
 			return angle;
 		return -angle;
-	}
-
-	template <typename T>
-	Vec2<T> Vec2<T>::Lerp(const Vec2& v, T factor)
-	{
-		return *this + (v - *this) * factor;
 	}
 
 	template <typename T>

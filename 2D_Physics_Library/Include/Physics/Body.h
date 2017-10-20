@@ -19,8 +19,12 @@ namespace P2D {
 	struct BodyMassData
 	{
 		f32 mass;
+		f32 invMass;
 		f32v2 centerOfMass;
 		f32 inertia;
+		f32 invInertia;
+
+		BodyMassData();
 	};
 
 	struct BodyDef
@@ -76,8 +80,11 @@ namespace P2D {
 
 		P2D_FORCE_INL f32v2 GetLinearVelocity() const { return m_LinearVelocity; }
 		P2D_FORCE_INL f32 GetAngularVelocity() const { return m_AngularVelocity; }
-		P2D_FORCE_INL f32v2 GetLinearDamping() const { return m_LinearDamping; }
-		P2D_FORCE_INL f32 GetAngularDamping() const { return m_AngularDamping; }
+		P2D_FORCE_INL const Velocity& GetVelocity() const { return m_Velocity; }
+
+		P2D_FORCE_INL const BodyMassData& GetMassData() const { return m_MassData; }
+
+		P2D_FORCE_INL i32 GetSolverIndex() const { return m_SolverIndex; }
 
 		void SetAwake(bool awake);
 		P2D_FORCE_INL bool IsAwake() const { return m_Awake; }
@@ -90,8 +97,10 @@ namespace P2D {
 		friend class World;
 		friend class Shape;
 		friend class CircleShape;
+		friend class EdgeShape;
 		friend class BroadPhase;
 		friend class ContactManager;
+		friend class PhysicsSolver;
 
 		Body* m_pNext;
 		Body* m_pPrev;
@@ -111,25 +120,34 @@ namespace P2D {
 		union
 		{
 			Transform m_Transform;
-			struct {
+			struct 
+			{
 				f32v2 m_Position;
 				f32 m_Angle;
 			};
 		};
-#pragma warning(pop)
+		union
+		{
+			Velocity m_Velocity;
+			struct
+			{
+				f32v2 m_LinearVelocity;
+				f32 m_AngularVelocity;
+			};
+		};
 
-		f32v2 m_LinearVelocity;
-		f32 m_AngularVelocity;
-		f32v2 m_LinearDamping;
-		f32 m_AngularDamping;
+#pragma warning(pop)
 
 		f32v2 m_Force;
 		f32 m_Torque;
 
 		BodyMassData m_MassData;
 
-		bool m_Active : 1;
-		bool m_Awake : 1;
+		i32 m_SolverIndex;
+
+		bool m_Active;
+		bool m_Awake;
+		bool m_InSolver;
 	};
 
 }

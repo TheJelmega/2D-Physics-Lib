@@ -2,13 +2,16 @@
 #include "Common/BlockAllocator.h"
 #include "Body.h"
 #include "Shapes/CircleShape.h"
+#include "Shapes/EdgeShape.h"
+#include "Shapes/ChainShape.h"
 #include "EventListener.h"
-#include "BroadPhase.h"
 #include "Contacts/ContactManager.h"
 #include "Contacts/ContactFilter.h"
+#include "Common/StackAllocator.h"
+#include "PhysicsSolver.h"
 
 namespace P2D {
-	
+
 	/**
 	 * Physics manager
 	 */
@@ -23,6 +26,10 @@ namespace P2D {
 
 		CircleShape* CreateShape(const CircleShapeDef& def);
 		void DestroyShape(CircleShape* pShape);
+		EdgeShape* CreateShape(const EdgeShapeDef& def);
+		void DestroyShape(EdgeShape* pShape);
+		ChainShape* CreateShape(const ChainShapeDef& def);
+		void DestroyShape(ChainShape* pShape);
 
 		/**
 		 * Update all physics, does timesteps, ...
@@ -40,6 +47,10 @@ namespace P2D {
 		 */
 		void ClearBodyForces();
 
+		P2D_FORCE_INL Body* GetBodyList() { return m_pBodyList; }
+		P2D_FORCE_INL const Body* GetBodyList() const { return m_pBodyList; }
+
+		P2D_FORCE_INL const Contact* GetTouchingContactList() const { return m_pPhysicsSolver->m_pTouchingContact; }
 
 		P2D_FORCE_INL void SetTimeStep(f32 timestep) { m_Timestep = timestep; }
 		P2D_FORCE_INL f32 GetTimeStep() const { return m_Timestep; }
@@ -57,11 +68,9 @@ namespace P2D {
 	private:
 		friend class Body;
 		friend class Shape;
+		friend class PhysicsSolver;
 		friend class BroadPhase;
 		friend class ContactManager;
-
-		void IntegrateVelocity(f32 timestep);
-		void IntegratePosition(f32 timestep);
 
 		f32 m_Dt;
 		f32 m_Timestep;
@@ -72,10 +81,12 @@ namespace P2D {
 		Body* m_pBodyList;
 		u32 m_BodyCount;
 		BlockAllocator m_Allocator;
+		StackAllocator m_StackAllocator;
 
 		EventListener m_EventListener;
-		BroadPhase* m_pBroadPhase;
-		ContactManager* m_pContactManager;
+		PhysicsSolver* m_pPhysicsSolver;
+		/*BroadPhase* m_pBroadPhase;
+		ContactManager* m_pContactManager;*/
 		ContactFilter m_ContactFilter;
 	};
 

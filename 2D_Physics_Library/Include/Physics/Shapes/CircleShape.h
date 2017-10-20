@@ -25,7 +25,6 @@ namespace P2D {
 		void SetMass(f32 mass) override;
 		void SetRelPosition(const f32v2& relPos) override;
 		void UpdateAABB() override;
-		AABB GetAABBAt(const Transform& transform) override;
 	private:
 		friend struct Collision;
 	};

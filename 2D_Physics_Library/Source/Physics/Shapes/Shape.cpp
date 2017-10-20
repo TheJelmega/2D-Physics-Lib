@@ -39,6 +39,7 @@ namespace P2D {
 		, m_RelPos(def.relpos)
 		, m_Filter(def.collisionFilter)
 		, m_Sensor(def.isSensor)
+		, m_Radius(0)
 	{
 	}
 
@@ -57,11 +58,5 @@ namespace P2D {
 
 	void Shape::UpdateAABB()
 	{
-	}
-
-	AABB Shape::GetAABBAt(const Transform& transform)
-	{
-		(void)transform;
-		return AABB();
 	}
 }

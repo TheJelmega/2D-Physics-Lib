@@ -1,5 +1,7 @@
 #include "Physics/Contacts/Contact.h"
 #include "Physics/Contacts/CircleContact.h"
+#include "Physics/Contacts/EdgeAndCircleContact.h"
+#include "Physics/Contacts/ChainAndCircleContact.h"
 #include "Physics/Body.h"
 #include "Physics/World.h"
 #include "Physics/EventListener.h"
@@ -30,7 +32,7 @@ namespace P2D {
 			InitializeRegisters();
 
 		Shape::Type type0 = pShape0->GetType();
-		Shape::Type type1 = pShape0->GetType();
+		Shape::Type type1 = pShape1->GetType();
 
 		ContactRegister::ContactCreateFunc createFunc = m_ContactRegisters[i32(type0)][i32(type1)].createFunc;
 		if (createFunc)
@@ -42,14 +44,14 @@ namespace P2D {
 		return nullptr;
 	}
 
-	void Contact::Destroy(Contact* contact, BlockAllocator* pAlloc)
+	void Contact::Destroy(Contact* pContact, BlockAllocator* pAlloc)
 	{
-		m_ContactRegisters[i32(contact->m_pShape0->GetType())][i32(contact->m_pShape1->GetType())].destroyFunc(contact, pAlloc);
+		m_ContactRegisters[i32(pContact->m_pShape0->GetType())][i32(pContact->m_pShape1->GetType())].destroyFunc(pContact, pAlloc);
 	}
 
 	void Contact::Evaluate(Manifold& manifold)
 	{
-		manifold.numPoints = 0;
+		manifold.numPairs = 0;
 	}
 
 	void Contact::RegisterPair(Shape::Type type0, Shape::Type type1, ContactRegister::ContactCreateFunc createFunc, ContactRegister::ContactDestroyFunc destroyFunc)
@@ -69,6 +71,8 @@ namespace P2D {
 	void Contact::InitializeRegisters()
 	{
 		RegisterPair(Shape::Type::Circle, Shape::Type::Circle, CircleContact::Create, CircleContact::Destroy);
+		RegisterPair(Shape::Type::Edge, Shape::Type::Circle, EdgeAndCircleContact::Create, EdgeAndCircleContact::Destroy);
+		RegisterPair(Shape::Type::Chain, Shape::Type::Circle, ChainAndCircleContact::Create, ChainAndCircleContact::Destroy);
 
 		m_Initialized = true;
 	}
@@ -76,20 +80,28 @@ namespace P2D {
 	Contact::Contact()
 		: m_pNext(nullptr)
 		, m_pPrev(nullptr)
+		, m_pNextTouching(nullptr)
 		, m_pShape0(nullptr)
 		, m_pShape1(nullptr)
+		, m_Index0(0)
+		, m_Index1(0)
 		, m_Touching(false)
 		, m_CheckFilter(false)
+		, m_InSolver(false)
 	{
 	}
 
 	Contact::Contact(Shape* pShape0, Shape* pShape1)
 		: m_pNext(nullptr)
 		, m_pPrev(nullptr)
+		, m_pNextTouching(nullptr)
 		, m_pShape0(pShape0)
 		, m_pShape1(pShape1)
+		, m_Index0(-1)
+		, m_Index1(-1)
 		, m_Touching(false)
 		, m_CheckFilter(false)
+		, m_InSolver(false)
 	{
 	}
 
@@ -99,8 +111,8 @@ namespace P2D {
 
 		bool sensor = m_pShape0->IsSensor() || m_pShape1->IsSensor();
 
-		bool touching = false;
 		bool wasTouching = m_Touching;
+		m_Touching = false;
 
 		EventListener& eventListener = pWorld->GetEventListener();
 
@@ -110,17 +122,22 @@ namespace P2D {
 		}
 		else
 		{
-			Manifold manifold;
-			Evaluate(manifold);
+			Evaluate(m_Manifold);
 
-			touching = m_Touching = manifold.numPoints > 0;
+			m_Touching = m_Manifold.numPairs > 0;
+
+			if (m_Touching)
+			{
+				m_Index0 = m_pShape0->GetBody()->GetSolverIndex();
+				m_Index1 = m_pShape1->GetBody()->GetSolverIndex();
+			}
 		}
 
-		if (touching && !wasTouching)
+		if (m_Touching && !wasTouching)
 			eventListener.OnCollisionEnter(this);
-		else if (!touching && wasTouching)
+		else if (!m_Touching && wasTouching)
 			eventListener.OnCollisionLeave(this);
-		else if (touching && wasTouching)
+		else if (m_Touching && wasTouching)
 			eventListener.OnCollisionStay(this);
 	}
 }

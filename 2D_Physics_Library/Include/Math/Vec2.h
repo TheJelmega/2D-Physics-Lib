@@ -91,7 +91,7 @@ namespace P2D {
 		/**
 		 * Get the 2D cross product of a vector and a scalar (Z-axis)
 		 */
-		Vec2 Cross(T val);
+		Vec2 Cross(T val) const;
 
 		/**
 		 * Get the normalized version of the vector
@@ -101,6 +101,10 @@ namespace P2D {
 		 * Normalize the vector
 		 */
 		Vec2& Normalize();
+		/**
+		 * Lerp between 2 vectors
+		 */
+		Vec2 Lerp(const Vec2& v, T factor) const;
 
 		/**
 		 * Get the rotated vector
@@ -122,11 +126,6 @@ namespace P2D {
 		 * @param[in] v	Vec2
 		 */
 		T Angle(const Vec2& v) const;
-
-		/**
-		 * Lerp between 2 vectors
-		 */
-		Vec2 Lerp(const Vec2& v, T factor);
 
 
 		bool operator==(const Vec2& v) const;

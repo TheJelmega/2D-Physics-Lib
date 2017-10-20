@@ -1,4 +1,5 @@
 #pragma once
+#include "Shapes/ChainShape.h"
 
 namespace P2D {
 	
@@ -17,6 +18,7 @@ namespace P2D {
 		void UpdatePairs(ContactManager* callback);
 
 	private:
+
 		World* m_pWorld;
 	};
 

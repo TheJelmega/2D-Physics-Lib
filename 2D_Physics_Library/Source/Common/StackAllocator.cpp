@@ -5,6 +5,13 @@
 namespace P2D {
 
 
+	StackAllocator::Entry::Entry()
+		: size(0)
+		, pData(nullptr)
+		, usedMalloc(false)
+	{
+	}
+
 	StackAllocator::StackAllocator()
 	{
 		m_pData = static_cast<u8*>(P2D_ALLOCATE(m_ReservedSize));
@@ -42,7 +49,7 @@ namespace P2D {
 		}
 		++m_CurrentEntry;
 
-		return m_Entries[m_CurrentEntry].pData;
+		return m_Entries[m_CurrentEntry - 1].pData;
 	}
 
 	void StackAllocator::Deallocate(void* ptr)

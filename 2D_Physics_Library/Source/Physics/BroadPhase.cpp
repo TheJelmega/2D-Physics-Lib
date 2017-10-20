@@ -30,7 +30,10 @@ namespace P2D {
 						if (pShape0->m_AABB.Overlaps(pShape1->m_AABB))
 						{
 							// Add pair
-							callback->AddPair(pShape0, pShape1);
+							if (pShape0->m_pBody->GetBodyType() != BodyType::Kinematic)
+								callback->AddPair(pShape1, pShape0);
+							else
+								callback->AddPair(pShape0, pShape1);
 						}
 					}
 				}

@@ -42,6 +42,14 @@ namespace P2D {
 			return;
 
 		Contact* pContact = Contact::Create(pShape0, pShape1, &m_pWorld->m_Allocator);
+		if (!pContact) // Unsupported contact
+			return;
+		
+		//Update shape order
+		pShape0 = pContact->m_pShape0;
+		pShape1 = pContact->m_pShape1;
+		pBody0 = pShape0->m_pBody;
+		pBody1 = pShape1->m_pBody;
 
 		// Add to world
 		pContact->m_pNext = m_pContactList;
@@ -85,7 +93,7 @@ namespace P2D {
 		if (pContact->m_pNext)
 			pContact->m_pNext->m_pPrev = pContact->m_pPrev;
 		if (pContact->m_pPrev)
-			pContact->m_pPrev->m_pNext = pContact->m_pPrev;
+			pContact->m_pPrev->m_pNext = pContact->m_pNext;
 		if (m_pContactList == pContact)
 			m_pContactList = pContact->m_pNext;
 
@@ -104,7 +112,7 @@ namespace P2D {
 			pContact->m_Node1.pNext->pPrev = pContact->m_Node1.pPrev;
 		if (pContact->m_Node1.pPrev)
 			pContact->m_Node1.pPrev->pNext = pContact->m_Node1.pNext;
-		if (pBody1->m_pContactList == &pContact->m_Node0)
+		if (pBody1->m_pContactList == &pContact->m_Node1)
 			pBody1->m_pContactList = pContact->m_Node1.pNext;
 
 		Contact::Destroy(pContact, &m_pWorld->m_Allocator);

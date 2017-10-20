@@ -1,5 +1,5 @@
 #include "Physics/Contacts/ContactFilter.h"
-#include "Physics/Collision.h"
+#include "Physics/Shapes/Shape.h"
 
 namespace P2D {
 

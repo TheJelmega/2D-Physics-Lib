@@ -3,23 +3,20 @@
 
 namespace P2D {
 	
-	struct ManifoldPoint
+	struct ManifoldPair
 	{
-		f32v2 position;		/**< Point position*/
-		f32v2 normal;		/**< Point normal*/
+		f32v2 position0;		/**< position 0*/
+		f32v2 position1;		/**< position 1*/
+		f32v2 normal;			/**< normal*/
+		f32 separation;			/**< separation*/
 	};
 
 	// Structure containing a set of points, used to calculate the collision after detection
 	struct Manifold
 	{
-		enum class Type
-		{
-			Circles			/**< 2 points, centers of circles*/
-		};
+		ManifoldPair pairs[g_MaxManifoldPairs]; /**< manifold points*/
 
-		ManifoldPoint points[g_MaxManifoldPoints]; /**< manifold points*/
-
-		u32 numPoints;
+		u32 numPairs;
 	};
 
 }

@@ -154,16 +154,20 @@
     <ClInclude Include="Include\Physics\Body.h" />
     <ClInclude Include="Include\Physics\BroadPhase.h" />
     <ClInclude Include="Include\Physics\Collision.h" />
-    <ClInclude Include="Include\Physics\CollisionSolver.h" />
+    <ClInclude Include="Include\Physics\Contacts\ChainAndCircleContact.h" />
     <ClInclude Include="Include\Physics\Contacts\CircleContact.h" />
     <ClInclude Include="Include\Physics\Contacts\Contact.h" />
     <ClInclude Include="Include\Physics\Contacts\ContactFilter.h" />
     <ClInclude Include="Include\Physics\Contacts\ContactManager.h" />
     <ClInclude Include="Include\Physics\Contacts\ContactSolver.h" />
+    <ClInclude Include="Include\Physics\Contacts\EdgeAndCircleContact.h" />
     <ClInclude Include="Include\Physics\EventListener.h" />
     <ClInclude Include="Include\Physics\Manifold.h" />
     <ClInclude Include="Include\Physics\Material.h" />
+    <ClInclude Include="Include\Physics\PhysicsSolver.h" />
+    <ClInclude Include="Include\Physics\Shapes\ChainShape.h" />
     <ClInclude Include="Include\Physics\Shapes\CircleShape.h" />
+    <ClInclude Include="Include\Physics\Shapes\EdgeShape.h" />
     <ClInclude Include="Include\Physics\Shapes\Shape.h" />
     <ClInclude Include="Include\Physics\World.h" />
   </ItemGroup>
@@ -175,6 +179,9 @@
   <ItemGroup>
     <ClCompile Include="Source\Common\BlockAllocator.cpp" />
     <ClCompile Include="Source\Common\StackAllocator.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\ChainAndCircleContact.cpp" />
+    <ClCompile Include="Source\Physics\Contacts\EdgeAndCircleContact.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsSolver.cpp" />
     <ClCompile Include="Source\Physics\Body.cpp" />
     <ClCompile Include="Source\Physics\BroadPhase.cpp" />
     <ClCompile Include="Source\Physics\Collision.cpp" />
@@ -185,7 +192,9 @@
     <ClCompile Include="Source\Physics\Contacts\ContactSolver.cpp" />
     <ClCompile Include="Source\Physics\EventListener.cpp" />
     <ClCompile Include="Source\Physics\Material.cpp" />
+    <ClCompile Include="Source\Physics\Shapes\ChainShape.cpp" />
     <ClCompile Include="Source\Physics\Shapes\CircleShape.cpp" />
+    <ClCompile Include="Source\Physics\Shapes\EdgeShape.cpp" />
     <ClCompile Include="Source\Physics\Shapes\Shape.cpp" />
     <ClCompile Include="Source\Physics\World.cpp" />
   </ItemGroup>

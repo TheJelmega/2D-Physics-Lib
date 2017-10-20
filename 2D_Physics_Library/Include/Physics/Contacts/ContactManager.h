@@ -17,6 +17,8 @@ namespace P2D {
 
 	private:
 		friend class World;
+		friend class ContactSolver;
+		friend class PhysicsSolver;
 
 		Contact* m_pContactList;
 		u32 m_ContactCount;

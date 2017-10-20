@@ -11,13 +11,10 @@ namespace P2D {
 
 	struct MassData
 	{
-		f32 mass;
-		f32v2 centerOfMass;
-		/**
-		 * Rotational inertia
-		 */
-		f32 inertia;
-		f32 area;
+		f32 mass; /**< Mass*/
+		f32v2 centerOfMass; /**< Center of mass*/
+		f32 inertia; /**< Rotational inertia */
+		f32 area; /**< Area*/
 
 		MassData();
 	};
@@ -45,12 +42,12 @@ namespace P2D {
 
 	struct ShapeDef
 	{
-		f32v2 relpos;
+		f32v2 relpos; /**< Relative position to body*/
 
-		Material material;
-		CollisionFilter collisionFilter;
+		Material material; /**< Physics material*/
+		CollisionFilter collisionFilter; /**< Contact filter*/
 
-		bool isSensor;
+		bool isSensor; /**< Whether the shape is a sensor*/
 
 		ShapeDef();
 	};
@@ -66,6 +63,8 @@ namespace P2D {
 			None,
 			Circle,
 			Polygon,
+			Edge,
+			Chain,
 			Count
 		};
 
@@ -77,7 +76,6 @@ namespace P2D {
 		virtual void UpdateMass();
 		virtual void SetMass(f32 mass);
 		virtual void UpdateAABB();
-		virtual AABB GetAABBAt(const Transform& transform);
 
 		P2D_FORCE_INL Shape* GetNext() { return m_pNext; }
 		P2D_FORCE_INL const Shape* GetNext() const { return m_pNext; }
@@ -93,6 +91,8 @@ namespace P2D {
 		virtual void SetRelPosition(const f32v2& relPos) { m_RelPos = relPos; }
 		P2D_FORCE_INL f32v2 GetRelPosition() const { return m_RelPos; }
 
+		P2D_FORCE_INL const MassData& GetMassData() const { return m_MassData; }
+
 		P2D_FORCE_INL const CollisionFilter& GetFilterData() const { return m_Filter; }
 
 		P2D_FORCE_INL bool IsSensor() const { return m_Sensor; }
@@ -104,19 +104,19 @@ namespace P2D {
 		friend class BroadPhase;
 		friend class ContactManager;
 
-		Shape* m_pNext;
-		Body* m_pBody;
+		Shape* m_pNext; /**< Next shape*/
+		Body* m_pBody; /**< Parent body*/
 
-		AABB m_AABB;
-		Type m_Type;
-		Material m_Material;
+		AABB m_AABB; /**< AABB*/
+		Type m_Type; /**< Shape type*/
+		Material m_Material; /**< Physics material*/
 
-		f32v2 m_RelPos;
-		MassData m_MassData;
-		CollisionFilter m_Filter;
-		bool m_Sensor;
+		f32v2 m_RelPos; /**< Relative position to body*/
+		MassData m_MassData; /**< Mass data*/
+		CollisionFilter m_Filter; /**< Contact filter*/
+		bool m_Sensor; /**< Whether the shape is a sensor*/
 
-		f32 m_Radius; /**< Circle -> radius, other -> error from edges*/
+		f32 m_Radius; /**< Circle -> radius, other -> skin thickness*/
 	};
 
 }

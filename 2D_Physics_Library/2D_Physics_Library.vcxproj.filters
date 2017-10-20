@@ -60,9 +60,6 @@
     <ClInclude Include="Include\Physics\Shapes\CircleShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Physics\CollisionSolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Physics\EventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -91,6 +88,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Physics\Contacts\ContactSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\PhysicsSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Shapes\EdgeShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Contacts\EdgeAndCircleContact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Shapes\ChainShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Physics\Contacts\ChainAndCircleContact.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -149,6 +161,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Physics\Contacts\ContactSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\PhysicsSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Shapes\EdgeShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Contacts\EdgeAndCircleContact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Shapes\ChainShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics\Contacts\ChainAndCircleContact.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

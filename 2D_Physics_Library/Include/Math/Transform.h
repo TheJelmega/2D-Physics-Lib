@@ -15,5 +15,13 @@ namespace P2D {
 		f32v2 Move(const f32v2& relpos) const;
 	};
 
+	struct Velocity
+	{
+		f32v2 linearVelocity;
+		f32 angularVelocity;
+
+		Velocity();
+	};
+
 }
 #include "Transform.inl"

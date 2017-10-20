@@ -1,8 +1,12 @@
 #pragma once
-#include "Shapes/CircleShape.h"
-#include "Manifold.h"
 
 namespace P2D {
+
+	class CircleShape;
+	class EdgeShape;
+
+	struct Transform;
+	struct Manifold;
 	
 	/**
 	 * Collision algorithms
@@ -12,6 +16,7 @@ namespace P2D {
 		
 		static void CircleAndCircle(CircleShape* pCircle0, const Transform& tr0, CircleShape* pCircle1, const Transform& tr1, Manifold& manifold);
 
+		static void EdgeAndCirlce(EdgeShape* pEdgeShape, const Transform& tr0, CircleShape* pCircle, const Transform& tr1, Manifold& manifold);
 	};
 
 }

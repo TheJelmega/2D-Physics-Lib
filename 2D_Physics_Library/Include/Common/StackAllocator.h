@@ -10,6 +10,8 @@ namespace P2D {
 			size_t size;
 			void* pData;
 			bool usedMalloc;
+
+			Entry();
 		};
 
 	public:
