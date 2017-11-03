@@ -12,24 +12,20 @@ namespace P2D {
 
 	ChainShape::ChainShape(const ChainShapeDef& def, BlockAllocator* pAlloc)
 		: Shape(Type::Chain, def)
+		, m_pAlloc(pAlloc)
 		, m_NumPoints(def.numPoints)
 		, m_Points(nullptr)
 	{
-		if (m_NumPoints > 0)
+		if (m_NumPoints > 1)
 		{
 			m_Points = static_cast<f32v2*>(pAlloc->Allocate(m_NumPoints * sizeof(f32v2)));
-			for (u32 i = 0; i < m_NumPoints; ++i)
-				m_Points[i] = def.points[i];
+			memcpy(m_Points, def.points, m_NumPoints * sizeof(f32v2));
 		}
 	}
 
 	ChainShape::~ChainShape()
 	{
-	}
-
-	void ChainShape::Dealloc(BlockAllocator* pAlloc)
-	{
-		pAlloc->Deallocate(m_Points, m_NumPoints * sizeof(f32v2));
+		m_pAlloc->Deallocate(m_Points, m_NumPoints * sizeof(f32v2));
 	}
 
 	void ChainShape::UpdateAABB()
@@ -38,10 +34,10 @@ namespace P2D {
 			return;
 
 		f32v2 point = m_Points[0] + m_RelPos;
-		Transform transform = m_pBody->GetTransform();
+		Transform transform = m_pBody->m_Transform;
 		point = transform.Move(point);
 
-		m_AABB.min = m_AABB.max = m_Points[0];
+		m_AABB.min = m_AABB.max = point;
 		for (u32 i = 1; i < m_NumPoints; ++i)
 		{
 			point = m_Points[i] + m_RelPos;

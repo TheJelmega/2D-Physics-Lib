@@ -53,8 +53,8 @@ bool Camera::UpdateEvent(const sf::Event& evnt)
 		if (evnt.mouseWheelScroll.delta > 0)
 		{
 			m_Zoom -= m_ZoomStep;
-			if (m_Zoom < 1.f)
-				m_Zoom = 1.f;
+			if (m_Zoom < 0.1f)
+				m_Zoom = 0.1f;
 			m_View.setSize(sf::Vector2f(m_ScreenSize) * m_Zoom);
 		}
 		else if (evnt.mouseWheelScroll.delta < 0)

@@ -5,6 +5,7 @@
 #include "Physics/World.h"
 #include "Common/StackAllocator.h"
 #include "Physics/Contacts/ContactSolver.h"
+#include "Physics/Constraint.h"
 
 namespace P2D {
 
@@ -28,14 +29,12 @@ namespace P2D {
 		, m_StaticFrictionCombinationType(FrictionCombinationType::Min)
 		, m_DynamicFrictionCombinationType(FrictionCombinationType::Min)
 	{
-		m_pBroadPhase = new BroadPhase(m_pWorld);
 		m_pContactManager = new ContactManager(m_pWorld);
 	}
 
 	PhysicsSolver::~PhysicsSolver()
 	{
 		Clear();
-		delete m_pBroadPhase;
 		delete m_pContactManager;
 	}
 
@@ -54,8 +53,7 @@ namespace P2D {
 	{
 		P2D_ASSERT(m_BodyCount < m_BodyCapacity);
 		pBody->m_SolverIndex = m_BodyCount;
-		m_pBodies[m_BodyCount] = pBody;
-		m_Transforms[m_BodyCount] = pBody->m_Transform;
+		m_pBodies[m_BodyCount] = pBody;m_Transforms[m_BodyCount] = pBody->m_Transform;
 		m_Velocities[m_BodyCount] = pBody->m_Velocity;
 		pBody->m_InSolver = true;
 		++m_BodyCount;
@@ -101,8 +99,13 @@ namespace P2D {
 		{
 			if (m_pBodies[i]->m_Type == BodyType::Static)
 				continue;
-			m_Transforms[i].position += m_Velocities[i].linearVelocity * dt;
-			m_Transforms[i].rotation += m_Velocities[i].angularVelocity * dt;
+			Transform& transform = m_Transforms[i];
+			//transform.position += m_Velocities[i].linearVelocity * dt;
+			f32 angle = m_Velocities[i].angularVelocity * dt;
+			f32v2 comLoc = transform.Move(m_pBodies[i]->m_MassData.centerOfMass);
+			transform.position.RotateAroundPoint(comLoc, angle);
+			transform.position += m_Velocities[i].linearVelocity * dt;
+			transform.rotation += angle;
 		}
 
 		//Update bodies for collision detection
@@ -110,11 +113,32 @@ namespace P2D {
 		{
 			m_pBodies[i]->m_Transform = m_Transforms[i];
 			m_pBodies[i]->m_Velocity = m_Velocities[i];
+		}
+
+		//Update constrains
+		for (Constraint* pConstraint = m_pWorld->m_pConstraintList; pConstraint; pConstraint = pConstraint->m_pNext)
+		{
+			pConstraint->Update();
+		}
+
+		//Solve joints
+		for (Joint* pJoint = m_pWorld->m_pJointList; pJoint; pJoint = pJoint->m_pNext)
+		{
+			pJoint->Update(dt);
+		}
+
+		//Update AABBs
+		for (u32 i = 0; i < m_BodyCount; ++i)
+		{
+			for (Shape* pShape = m_pBodies[i]->m_pShape; pShape; pShape = pShape->m_pNext)
+				m_pWorld->m_pBroadPhase->UpdateShape(pShape);
 			m_pBodies[i]->UpdateAABB();
+			m_Transforms[i] = m_pBodies[i]->m_Transform;
+			m_Velocities[i] = m_pBodies[i]->m_Velocity;
 		}
 
 		//Update collisions
-		m_pBroadPhase->UpdatePairs(m_pContactManager);
+		m_pWorld->m_pBroadPhase->UpdatePairs(m_pContactManager);
 		m_pContactManager->UpdateCollisions();
 
 		//Add new contacts and awoken bodies
@@ -134,7 +158,47 @@ namespace P2D {
 		{
 			m_pBodies[i]->m_Transform = m_Transforms[i];
 			m_pBodies[i]->m_Velocity = m_Velocities[i];
-			m_pBodies[i]->UpdateAABB();
+		}
+
+		//Solve joints
+		for (Joint* pJoint = m_pWorld->m_pJointList; pJoint; pJoint = pJoint->m_pNext)
+		{
+			pJoint->Update(dt);
+		}
+
+		//Update AABB, limit linear and angular velocity and update sleep
+		for (u32 i = 0; i < m_BodyCount; ++i)
+		{
+			Body* pBody = m_pBodies[i];
+
+			for (Shape* pShape = m_pBodies[i]->m_pShape; pShape; pShape = pShape->m_pNext)
+				m_pWorld->m_pBroadPhase->UpdateShape(pShape);
+			pBody->UpdateAABB();
+
+			//linear
+			constexpr f32 maxLinVel = g_MaxLinearVelocity * g_MaxLinearVelocity;
+			f32 l = pBody->m_LinearVelocity.SqLength();
+			if (l > maxLinVel)
+			{
+				f32 l0 = sqrt(l);
+				pBody->m_LinearVelocity *= (g_MaxLinearVelocity / l0);
+			}
+
+			//angular
+			if (pBody->m_AngularVelocity < -g_MaxAngulareVelocity)
+				pBody->m_AngularVelocity = -g_MaxAngulareVelocity;
+			if (pBody->m_AngularVelocity > g_MaxAngulareVelocity)
+				pBody->m_AngularVelocity = g_MaxAngulareVelocity;
+
+			constexpr f32 maxSleepVel = g_MaxSleepLinearVelocity * g_MaxSleepLinearVelocity;
+			if (l < maxSleepVel && abs(pBody->m_AngularVelocity) < g_MaxSleepAngularVelocity)
+			{
+				pBody->m_SleepTimer += dt;
+				if (pBody->m_SleepTimer >= g_TimeToSleep)
+					pBody->SetAwake(false);
+			}
+			else
+				pBody->m_SleepTimer = 0.f;
 		}
 	}
 
@@ -208,7 +272,7 @@ namespace P2D {
 	{
 		for (Contact* pContact = m_pContactManager->m_pContactList; pContact; pContact = pContact->m_pNext)
 		{
-			if (pContact->m_InSolver || !pContact->m_Touching)
+			if (pContact->m_InSolver || !pContact->m_Touching || !pContact->m_Active)
 				continue;
 
 			Add(pContact);

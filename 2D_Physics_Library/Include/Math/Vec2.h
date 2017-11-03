@@ -112,10 +112,15 @@ namespace P2D {
 		 */
 		Vec2 Rotated(T angle) const;
 		/**
-		* Rotate vector (changes vector)
+		* Rotate the vector (changes vector)
 		* @param[in] angle	Angle to rotate by
 		*/
 		Vec2& Rotate(T angle);
+
+		/**
+		 * Rotate the vector around a point
+		 */
+		Vec2& RotateAroundPoint(const Vec2& point, T angle);
 		
 		/**
 		 * Get the angle of a vector

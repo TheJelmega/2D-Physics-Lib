@@ -26,6 +26,8 @@ namespace P2D {
 		friend struct Collision;
 		friend class ChainShape;
 		friend class ChainAndCircleContact;
+		friend class ChainAndPolygonContact;
+		friend class Raycaster;
 
 		f32v2 m_V0, m_V1, m_Normal;
 	};

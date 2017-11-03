@@ -24,15 +24,18 @@ namespace P2D {
 
 	Shape::Shape()
 		: m_pNext(nullptr)
+		, m_pNextQueried(nullptr)
 		, m_pBody(nullptr)
 		, m_Type(Type::None)
 		, m_Sensor(false)
 		, m_Radius(0)
+		, m_ProxyId(-1)
 	{
 	}
 
 	Shape::Shape(Type type, const ShapeDef& def)
 		: m_pNext(nullptr)
+		, m_pNextQueried(nullptr)
 		, m_pBody(nullptr)
 		, m_Type(type)
 		, m_Material(def.material)
@@ -40,6 +43,7 @@ namespace P2D {
 		, m_Filter(def.collisionFilter)
 		, m_Sensor(def.isSensor)
 		, m_Radius(0)
+		, m_ProxyId(-1)
 	{
 	}
 
@@ -48,6 +52,10 @@ namespace P2D {
 	}
 
 	void Shape::UpdateMass()
+	{
+	}
+
+	void Shape::UpdateInertia()
 	{
 	}
 

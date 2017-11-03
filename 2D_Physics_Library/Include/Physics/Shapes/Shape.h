@@ -13,6 +13,7 @@ namespace P2D {
 	{
 		f32 mass; /**< Mass*/
 		f32v2 centerOfMass; /**< Center of mass*/
+		f32 shapeInertia; /**< Inertia of the shape, independent of relative position*/
 		f32 inertia; /**< Rotational inertia */
 		f32 area; /**< Area*/
 
@@ -74,6 +75,7 @@ namespace P2D {
 		virtual ~Shape();
 
 		virtual void UpdateMass();
+		virtual void UpdateInertia();
 		virtual void SetMass(f32 mass);
 		virtual void UpdateAABB();
 
@@ -103,8 +105,11 @@ namespace P2D {
 		friend struct Collision;
 		friend class BroadPhase;
 		friend class ContactManager;
+		friend class Raycaster;
+		friend class PhysicsSolver;
 
 		Shape* m_pNext; /**< Next shape*/
+		Shape* m_pNextQueried; /**< Next shape for raycast*/
 		Body* m_pBody; /**< Parent body*/
 
 		AABB m_AABB; /**< AABB*/
@@ -117,6 +122,8 @@ namespace P2D {
 		bool m_Sensor; /**< Whether the shape is a sensor*/
 
 		f32 m_Radius; /**< Circle -> radius, other -> skin thickness*/
+
+		i32 m_ProxyId;
 	};
 
 }

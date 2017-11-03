@@ -73,7 +73,7 @@ namespace P2D {
 			{
 				if (m_ChunkSize - pChunk->index > blockSize)
 				{
-					u8* data = m_pData + sizeof(ChunkHeader) + pChunk->index;
+					u8* data = reinterpret_cast<u8*>(pChunk) + sizeof(ChunkHeader) + pChunk->index;
 					pChunk->index += blockSize;
 					return data;
 				}
@@ -83,11 +83,11 @@ namespace P2D {
 				pChunk = pNext;
 			}
 
-			ChunkHeader* pNewChunk = (ChunkHeader*)P2D_ALLOCATE(m_ChunkSize + sizeof(ChunkHeader));
+			ChunkHeader* pNewChunk = static_cast<ChunkHeader*>(P2D_ALLOCATE(m_ChunkSize + sizeof(ChunkHeader)));
 			pNewChunk->next = nullptr;
 			pNewChunk->index = blockSize;
 			pChunk->next = pNewChunk;
-			return m_pData + pNewChunk->index + sizeof(ChunkHeader);
+			return reinterpret_cast<u8*>(pNewChunk) + sizeof(ChunkHeader);
 
 		}
 	}
@@ -116,7 +116,7 @@ namespace P2D {
 			while (pNext)
 			{
 				pFree = pNext;
-				pNext = pFree;
+				pNext = pFree->next;
 			}
 			pFree->next = pBlock;
 		}

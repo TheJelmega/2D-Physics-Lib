@@ -20,7 +20,7 @@ namespace P2D {
 
 	void EdgeAndCircleContact::Evaluate(Manifold& manifold)
 	{
-		Collision::EdgeAndCirlce(reinterpret_cast<EdgeShape*>(m_pShape0), m_pShape0->GetBody()->GetTransform(), static_cast<CircleShape*>(m_pShape1), m_pShape1->GetBody()->GetTransform(), manifold);
+		Collision::EdgeAndCirlce(reinterpret_cast<EdgeShape*>(m_pShape0), m_pShape0->GetBody()->GetTransform(), reinterpret_cast<CircleShape*>(m_pShape1), m_pShape1->GetBody()->GetTransform(), manifold);
 	}
 
 	EdgeAndCircleContact::EdgeAndCircleContact(Shape* pShape0, Shape* pShape1)

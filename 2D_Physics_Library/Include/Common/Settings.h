@@ -44,13 +44,26 @@ namespace P2D {
 	/**Inertia of static object*/
 	constexpr f32 g_StaticInertia = (std::numeric_limits<f32>::max)();
 
-	/**small length used as collision and constraint tollerance*/
+	/**Small length used as collision and constraint tollerance*/
 	constexpr f32 g_LinearSlop = 0.005f;
 
-	/**skin whtickness of polyogns/edges*/
+	/**Skin whtickness of polyogns/edges*/
 	constexpr f32 g_SkinThickness = 2.f * g_LinearSlop;
 
-	/**value to fatten AABB with*/
+	/**Value to fatten AABB with*/
 	constexpr f32 g_AABBExtension = 0.1f;
+	/**Used for AABBTree's move predicition*/
+	constexpr f32 g_AABBMultiplier = 2.f;
 
+	/**Max linear velocity of an object*/
+	constexpr f32 g_MaxLinearVelocity = 10'000.f;
+	/**Max angular velocity of an object*/
+	constexpr f32 g_MaxAngulareVelocity = 10'000.f;
+
+	/**Max sleep linear velocity*/
+	constexpr f32 g_MaxSleepLinearVelocity = 0.2f;
+	/**Max sleep angular velocity*/
+	constexpr f32 g_MaxSleepAngularVelocity = 0.2f;
+	/**Time to sleep*/
+	constexpr f32 g_TimeToSleep = 0.5f;
 }

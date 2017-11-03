@@ -3,6 +3,7 @@
 #include "Math/Math.h"
 #include "Common/Settings.h"
 #include "Contacts/Contact.h"
+#include "Joints/Joint.h"
 
 namespace P2D {
 
@@ -98,9 +99,19 @@ namespace P2D {
 		friend class Shape;
 		friend class CircleShape;
 		friend class EdgeShape;
+		friend class ChainShape;
+		friend class PolygonShape;
 		friend class BroadPhase;
 		friend class ContactManager;
 		friend class PhysicsSolver;
+		friend struct Collision;
+		friend class Constraint;
+		friend class Joint;
+		friend class RevoluteJoint;
+		friend class DistanceJoint;
+		friend class FixedJoint;
+		friend class PrismaticJoint;
+		friend class Raycaster;
 
 		Body* m_pNext;
 		Body* m_pPrev;
@@ -110,6 +121,7 @@ namespace P2D {
 		u32 m_ShapeCount;
 
 		ContactNode* m_pContactList;
+		JointNode* m_pJointList;
 
 		AABB m_AABB;
 
@@ -144,6 +156,7 @@ namespace P2D {
 		BodyMassData m_MassData;
 
 		i32 m_SolverIndex;
+		f32 m_SleepTimer;
 
 		bool m_Active;
 		bool m_Awake;

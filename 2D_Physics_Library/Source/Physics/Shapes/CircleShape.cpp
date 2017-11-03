@@ -25,21 +25,34 @@ namespace P2D {
 	void CircleShape::UpdateMass()
 	{
 		m_MassData.mass = m_Material.density * m_MassData.area;
-		m_MassData.inertia = m_MassData.mass * (.5f * m_Radius * m_Radius + m_MassData.centerOfMass.SqLength());
+		m_MassData.shapeInertia = m_MassData.mass * 0.5f * m_Radius * m_Radius;
+		if (m_pBody)
+			UpdateInertia();
 	}
 
 	void CircleShape::SetMass(f32 mass)
 	{
 		m_MassData.mass = mass;
 		m_Material.density = mass / m_MassData.area;
-		m_MassData.inertia = mass * (0.5f * m_Radius * m_Radius + m_MassData.centerOfMass.SqLength());
+		m_MassData.shapeInertia = m_MassData.mass * 0.5f * m_Radius * m_Radius;
+		if (m_pBody)
+			UpdateInertia();
+	}
+
+	void CircleShape::UpdateInertia()
+	{
+		m_MassData.inertia = m_MassData.shapeInertia + m_MassData.mass * (m_MassData.centerOfMass - m_pBody->m_MassData.centerOfMass).SqLength();
 	}
 
 	void CircleShape::SetRelPosition(const f32v2& relPos)
 	{
 		m_RelPos = relPos;
 		m_MassData.centerOfMass = relPos;
-		m_pBody->UpdateAABB();
+		if (m_pBody)
+		{
+			UpdateInertia();
+			m_pBody->UpdateAABB();
+		}
 	}
 
 	void CircleShape::UpdateAABB()

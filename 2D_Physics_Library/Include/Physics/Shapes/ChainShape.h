@@ -18,7 +18,6 @@ namespace P2D {
 	public:
 		ChainShape(const ChainShapeDef& def, BlockAllocator* pAlloc);
 		~ChainShape() override;
-		void Dealloc(BlockAllocator* pAlloc);
 		void UpdateAABB() override;
 		void SetRelPosition(const f32v2& relPos) override;
 
@@ -29,7 +28,10 @@ namespace P2D {
 
 	private:
 		friend class ChainAndCircleContact;
+		friend class ChainAndPolygonContact;
+		friend class Raycaster;
 
+		BlockAllocator* m_pAlloc;
 		u32 m_NumPoints;
 		f32v2* m_Points;
 	};

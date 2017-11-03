@@ -38,6 +38,15 @@ namespace P2D {
 				return;
 		}
 
+		//Check joints
+		for (JointNode* pNode = pShape0->m_pBody->m_pJointList; pNode; pNode = pNode->pNext)
+		{
+			if (pNode->pOther == pShape1->m_pBody && !pNode->pJoint->DoShapesCollide())
+			{
+				return;
+			}
+		}
+
 		if (!m_pWorld->m_ContactFilter.ShouldCollide(pShape0, pShape1))
 			return;
 
@@ -144,9 +153,23 @@ namespace P2D {
 
 			bool active0 = pBody0->m_Active && pBody0->m_Type != BodyType::Static;
 			bool active1 = pBody1->m_Active && pBody1->m_Type != BodyType::Static;
+			//Check if awake and not falling asleep
+			bool awake0 = active0 && pBody0->m_Awake && pBody0->m_SleepTimer <= Math::Epsilon<f32>;
+			bool awake1 = active1 && pBody1->m_Awake && pBody1->m_SleepTimer <= Math::Epsilon<f32>;
+
+			if (awake0 || awake1)
+			{
+				// Make sure both bodies are awake
+				pBody0->SetAwake(true);
+				pBody1->SetAwake(true);
+				pContact->m_Active = true;
+			}
+			else
+				pContact->m_Active = false;
 
 			if (!active0 && !active1)
 			{
+				pContact->m_Active = false;
 				pContact = pContact->m_pNext;
 				continue;
 			}

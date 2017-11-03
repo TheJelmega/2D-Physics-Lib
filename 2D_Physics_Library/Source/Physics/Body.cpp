@@ -1,4 +1,6 @@
 #include "Physics/Body.h"
+#include "Physics/World.h"
+#include "Physics/BroadPhase.h"
 
 namespace P2D {
 
@@ -25,12 +27,14 @@ namespace P2D {
 		, m_pShape(nullptr)
 		, m_ShapeCount(0)
 		, m_pContactList(nullptr)
+		, m_pJointList(nullptr)
 		, m_Type(def.type)
 		, m_Position(def.position)
 		, m_Angle(def.angle)
 		, m_Velocity()
 		, m_Torque(0.f)
 		, m_SolverIndex(-1)
+		, m_SleepTimer(0)
 		, m_Active(def.active)
 		, m_Awake(def.awake)
 		, m_InSolver(false)
@@ -60,7 +64,10 @@ namespace P2D {
 		m_pShape = pShape;
 		pShape->m_pBody = this;
 		pShape->UpdateAABB();
-		m_AABB.Combine(pShape->m_AABB);
+		if (m_ShapeCount > 0)
+			m_AABB.Combine(pShape->m_AABB);
+		else
+			m_AABB = pShape->m_AABB;
 		++m_ShapeCount;
 
 		//Update mass data, if not static
@@ -68,11 +75,32 @@ namespace P2D {
 		{
 			f32v2 tempCenterOfMass = m_MassData.mass * m_MassData.centerOfMass + pShape->m_MassData.mass * pShape->m_MassData.centerOfMass;
 			m_MassData.mass += pShape->m_MassData.mass;
-			m_MassData.invMass = 1.f / m_MassData.mass;
+			if (m_MassData.mass < Math::Epsilon<f32>)
+				m_MassData.invMass = 0.f;
+			else
+				m_MassData.invMass = 1.f / m_MassData.mass;
 			m_MassData.centerOfMass = tempCenterOfMass / m_MassData.mass;
+			/*pShape->UpdateInertia();
 			m_MassData.inertia += pShape->m_MassData.inertia;
-			m_MassData.invInertia = 1.f / m_MassData.inertia;
+			if (m_MassData.inertia < Math::Epsilon<f32>)
+				m_MassData.invInertia = 0.f;
+			else
+				m_MassData.invInertia = 1.f / m_MassData.inertia;*/
+		
+
+			//Recalculate inertia
+			for (Shape* pShape0 = m_pShape; pShape0; pShape0 = pShape0->m_pNext)
+			{
+				pShape0->UpdateInertia();
+				m_MassData.inertia += pShape0->m_MassData.inertia;
+			}
+			if (m_MassData.inertia < Math::Epsilon<f32>)
+				m_MassData.invInertia = 0.f;
+			else
+				m_MassData.invInertia = 1.f / m_MassData.inertia;
 		}
+
+		m_pWorld->m_pBroadPhase->AddShape(pShape);
 	}
 
 	void Body::ApplyForce(f32v2 force, bool wake)
@@ -100,7 +128,7 @@ namespace P2D {
 		if (m_Awake)
 		{
 			m_Force += force;
-			m_Torque += (point - m_Position).Cross(force);
+			m_Torque += (point - (m_Position + m_MassData.centerOfMass)).Cross(force);
 		}
 	}
 
@@ -144,7 +172,7 @@ namespace P2D {
 		if (m_Awake)
 		{
 			m_LinearVelocity += impulse * m_MassData.invMass;
-			f32 torque = (point - m_Position).Cross(impulse);
+			f32 torque = (point - (m_Position + m_MassData.centerOfMass)).Cross(impulse);
 			m_AngularVelocity += torque * m_MassData.invInertia;
 		}
 	}
@@ -184,10 +212,15 @@ namespace P2D {
 	{
 		if (m_Awake == awake)
 			return;
+
+		m_Awake = awake;
+		m_SleepTimer = 0.f;
 	}
 
 	void Body::SetActive(bool active)
 	{
 		m_Active = active;
+		if (active)
+			SetAwake(true);
 	}
 }

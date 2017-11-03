@@ -50,6 +50,7 @@ namespace P2D {
 		P2D_FORCE_INL const Shape* GetShape1() const { return m_pShape1; }
 
 		P2D_FORCE_INL const Manifold& GetManifold() const { return m_Manifold; }
+		P2D_FORCE_INL bool IsActive() const { return m_Active; }
 
 		virtual void Evaluate(Manifold& manifold);
 
@@ -89,6 +90,7 @@ namespace P2D {
 		bool m_Touching;
 		bool m_CheckFilter;
 		bool m_InSolver;
+		bool m_Active;
 	};
 
 }

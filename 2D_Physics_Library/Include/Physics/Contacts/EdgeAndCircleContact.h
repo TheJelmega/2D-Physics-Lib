@@ -3,7 +3,7 @@
 
 namespace P2D {
 	
-	class EdgeAndCircleContact : Contact
+	class EdgeAndCircleContact : public Contact
 	{
 	public:
 		static Contact* Create(Shape* pShape0, Shape* pShape1, BlockAllocator* pAlloc);

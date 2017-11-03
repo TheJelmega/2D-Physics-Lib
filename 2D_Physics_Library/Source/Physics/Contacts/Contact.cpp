@@ -2,9 +2,13 @@
 #include "Physics/Contacts/CircleContact.h"
 #include "Physics/Contacts/EdgeAndCircleContact.h"
 #include "Physics/Contacts/ChainAndCircleContact.h"
+#include "Physics/Contacts/PolygonAndCircleContact.h"
+#include "Physics/Contacts/EdgeAndPolygonContact.h"
+#include "Physics/Contacts/PolygonContact.h"
 #include "Physics/Body.h"
 #include "Physics/World.h"
 #include "Physics/EventListener.h"
+#include "Physics/Contacts/ChainAndPolygonContact.h"
 
 namespace P2D {
 
@@ -73,6 +77,10 @@ namespace P2D {
 		RegisterPair(Shape::Type::Circle, Shape::Type::Circle, CircleContact::Create, CircleContact::Destroy);
 		RegisterPair(Shape::Type::Edge, Shape::Type::Circle, EdgeAndCircleContact::Create, EdgeAndCircleContact::Destroy);
 		RegisterPair(Shape::Type::Chain, Shape::Type::Circle, ChainAndCircleContact::Create, ChainAndCircleContact::Destroy);
+		RegisterPair(Shape::Type::Polygon, Shape::Type::Circle, PolygonAndCircleContact::Create, PolygonAndCircleContact::Destroy);
+		RegisterPair(Shape::Type::Edge, Shape::Type::Polygon, EdgeAndPolygonContact::Create, EdgeAndPolygonContact::Destroy);
+		RegisterPair(Shape::Type::Chain, Shape::Type::Polygon, ChainAndPolygonContact::Create, ChainAndPolygonContact::Destroy);
+		RegisterPair(Shape::Type::Polygon, Shape::Type::Polygon, PolygonContact::Create, PolygonContact::Destroy);
 
 		m_Initialized = true;
 	}
@@ -88,6 +96,7 @@ namespace P2D {
 		, m_Touching(false)
 		, m_CheckFilter(false)
 		, m_InSolver(false)
+		, m_Active(true)
 	{
 	}
 
@@ -102,6 +111,7 @@ namespace P2D {
 		, m_Touching(false)
 		, m_CheckFilter(false)
 		, m_InSolver(false)
+		, m_Active(true)
 	{
 	}
 
@@ -118,7 +128,10 @@ namespace P2D {
 
 		if (sensor)
 		{
-			//TODO Check if overlap
+			Evaluate(m_Manifold);
+
+			m_Touching = m_Manifold.numPairs > 0;
+			m_Manifold.numPairs = 0;
 		}
 		else
 		{

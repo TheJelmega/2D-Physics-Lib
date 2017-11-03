@@ -46,6 +46,10 @@ namespace P2D {
 		 */
 		bool Overlaps(const AABB& aabb) const;
 
+		bool Contains(const AABB& aabb) const;
+
+		f32 GetPerimeter() const;
+
 		/**
 		 * Pad the AABB (extend size)
 		 * @value	Value to pad with

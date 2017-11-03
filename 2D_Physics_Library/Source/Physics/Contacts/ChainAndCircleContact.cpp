@@ -33,9 +33,12 @@ namespace P2D {
 			pChain->GetChildEdge(&edge, i);
 			if (!edge.m_AABB.Overlaps(m_pShape1->GetAABB())) // Quick AABB check
 				continue;
-			Collision::EdgeAndCirlce(&edge, pChain->GetBody()->GetTransform(), static_cast<CircleShape*>(m_pShape1), m_pShape1->GetBody()->GetTransform(), tempManifold);
+			Collision::EdgeAndCirlce(&edge, pChain->GetBody()->GetTransform(), reinterpret_cast<CircleShape*>(m_pShape1), m_pShape1->GetBody()->GetTransform(), tempManifold);
 			if (tempManifold.numPairs > 0) // if numPairs > 0, numPair should be 1, so just copy data
 			{
+				if (manifold.numPairs >= g_MaxManifoldPairs)
+					return;
+
 				m_Manifold.pairs[m_Manifold.numPairs] = tempManifold.pairs[0];
 				++m_Manifold.numPairs;
 			}

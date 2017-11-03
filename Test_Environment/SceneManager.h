@@ -11,6 +11,7 @@ public:
 	void Init(Context& context);
 	void Update(sf::Time dt);
 	void UpdateEvent(const sf::Event& e);
+	void OnGui(Context& context);
 	void Draw(DrawContext& context);
 	void Cleanup();
 
@@ -23,5 +24,8 @@ private:
 	std::vector<Scene*> m_pScenes;
 	bool m_HasScene = false;
 
+	float m_TimePassed = 0.f;
+	int m_Frames = 0;
+	int m_Fps = 0;
 };
 

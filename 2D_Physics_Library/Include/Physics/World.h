@@ -9,6 +9,14 @@
 #include "Contacts/ContactFilter.h"
 #include "Common/StackAllocator.h"
 #include "PhysicsSolver.h"
+#include "Shapes/PolygonShape.h"
+#include "Constraint.h"
+#include "Joints/Joint.h"
+#include "Joints/RevoluteJoint.h"
+#include "Joints/DistanceJoint.h"
+#include "Joints/FixedJoint.h"
+#include "Joints/PrismaticJoint.h"
+#include "Raycaster.h"
 
 namespace P2D {
 
@@ -30,6 +38,20 @@ namespace P2D {
 		void DestroyShape(EdgeShape* pShape);
 		ChainShape* CreateShape(const ChainShapeDef& def);
 		void DestroyShape(ChainShape* pShape);
+		PolygonShape* CreateShape(const PolygonShapeDef& def);
+		void DestroyShape(PolygonShape* pShape);
+
+		Constraint* CreateConstraint(const ConstraintDef& def);
+		void DestroyConstraint(Constraint* pConstraint);
+
+		RevoluteJoint* CreateJoint(const RevoluteJointDef& def);
+		void DestroyJoint(RevoluteJoint* pJoint);
+		DistanceJoint* CreateJoint(const DistanceJointDef& def);
+		void DestroyJoint(DistanceJoint* pJoint);
+		FixedJoint* CreateJoint(const FixedJointDef& def);
+		void DestroyJoint(FixedJoint* pJoint);
+		PrismaticJoint* CreateJoint(const PrismaticJointDef& def);
+		void DestroyJoint(PrismaticJoint* pJoint);
 
 		/**
 		 * Update all physics, does timesteps, ...
@@ -46,6 +68,9 @@ namespace P2D {
 		 * Manually clear all forces on bodies
 		 */
 		void ClearBodyForces();
+
+
+		void Raycast(const RaycastInput& input, RaycastOutput& output);
 
 		P2D_FORCE_INL Body* GetBodyList() { return m_pBodyList; }
 		P2D_FORCE_INL const Body* GetBodyList() const { return m_pBodyList; }
@@ -65,12 +90,22 @@ namespace P2D {
 
 		P2D_FORCE_INL EventListener& GetEventListener() { return m_EventListener; }
 
+		//Counts
+		P2D_FORCE_INL u32 GetBodyCount() const { return m_BodyCount; }
+		P2D_FORCE_INL u32 GetShapeCount() const { return m_ShapeCount; }
+		P2D_FORCE_INL u32 GetConstraintCount() const { return m_ConstraintCount; }
+		P2D_FORCE_INL u32 GetJointCount() const { return m_JointCount; }
+		P2D_FORCE_INL u32 GetContactCount() const { return m_pPhysicsSolver->m_pContactManager->m_ContactCount; }
+		P2D_FORCE_INL u32 GetTouchingContactCount() const { return m_pPhysicsSolver->m_ContactCount; }
+
 	private:
 		friend class Body;
 		friend class Shape;
 		friend class PhysicsSolver;
 		friend class BroadPhase;
 		friend class ContactManager;
+		friend struct Collision;
+		friend class Raycaster;
 
 		f32 m_Dt;
 		f32 m_Timestep;
@@ -80,14 +115,23 @@ namespace P2D {
 		
 		Body* m_pBodyList;
 		u32 m_BodyCount;
+		u32 m_ShapeCount;
+
+		Constraint* m_pConstraintList;
+		u32 m_ConstraintCount;
+
+		Joint* m_pJointList;
+		u32 m_JointCount;
+
 		BlockAllocator m_Allocator;
 		StackAllocator m_StackAllocator;
 
 		EventListener m_EventListener;
 		PhysicsSolver* m_pPhysicsSolver;
-		/*BroadPhase* m_pBroadPhase;
-		ContactManager* m_pContactManager;*/
 		ContactFilter m_ContactFilter;
+
+		BroadPhase* m_pBroadPhase;
+		Raycaster* m_pRaycaster;
 	};
 
 }

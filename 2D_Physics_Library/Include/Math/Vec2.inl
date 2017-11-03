@@ -274,6 +274,15 @@ namespace P2D {
 	}
 
 	template <typename T>
+	Vec2<T>& Vec2<T>::RotateAroundPoint(const Vec2& point, T angle)
+	{
+		Vec2 pos = *this - point;
+		pos.Rotate(angle);
+		*this = pos + point;
+		return *this;
+	}
+
+	template <typename T>
 	T Vec2<T>::Angle() const
 	{
 		return atan2(y, x);
@@ -285,7 +294,12 @@ namespace P2D {
 		Vec2 v1 = Normalized();
 		Vec2 v2 = v.Normalized();
 		T dot = v1.Dot(v2);
-		T angle = acos(dot);
+		dot = Math::Clamp(dot, -1.f, 1.f);
+		T angle;
+		if (dot == 0)
+			angle = Math::Pi<f32> / 2.f;
+		else
+			angle = acos(dot);
 		T cross = v1.Cross(v2);
 		if (cross >= 0)
 			return angle;

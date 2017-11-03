@@ -62,7 +62,6 @@ namespace P2D {
 		void AddNewBodies();
 
 		World* m_pWorld;
-		BroadPhase* m_pBroadPhase;
 		ContactManager* m_pContactManager;
 		StackAllocator* m_pAllocator;
 

@@ -13,18 +13,13 @@ public:
 	void Draw(DrawContext& context) override;
 	void CleanUp() override;
 
+	void OnGui(Context& context) override;
 private:
-	sf::Font m_Font;
-	sf::Text m_FpsCounter;
-	float m_TimePassed = 0.f;
-	int m_Frames = 0;
 
 	/*sf::CircleShape m_Circle;
 
 	P2D::Body* m_pBody;
 	P2D::Body *m_pStaticBody0, *m_pStaticBody1;*/
-
-	bool m_UpdatePhysics = false;
 	
 };
 

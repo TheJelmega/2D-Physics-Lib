@@ -47,13 +47,26 @@ namespace P2D {
 
 	P2D_INL void AABB::Combine(const AABB& aabb)
 	{
-		min = Math::Min(min, aabb.min);
-		max = Math::Max(max, aabb.max);
+		min.x = Math::Min(min.x, aabb.min.x);
+		min.y = Math::Min(min.y, aabb.min.y);
+		max.x = Math::Max(max.x, aabb.max.x);
+		max.y = Math::Max(max.y, aabb.max.y);
 	}
 
 	P2D_INL bool AABB::Overlaps(const AABB& aabb) const
 	{
 		return min <= aabb.max && max >= aabb.min;
+	}
+
+	P2D_INL bool AABB::Contains(const AABB& aabb) const
+	{
+		return aabb.min >= min && aabb.max <= max;
+	}
+
+	P2D_INL f32 AABB::GetPerimeter() const
+	{
+		f32v2 diff = max - min;
+		return 2.f * (diff.x + diff.y);
 	}
 
 	P2D_INL void AABB::Pad(f32 value)
