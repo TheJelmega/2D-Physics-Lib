@@ -37,22 +37,39 @@ namespace P2D {
 		AABB& operator=(const AABB& aabb);
 		AABB& operator=(AABB&& aabb) noexcept;
 
+		/**
+		 * Move an AABB
+		 * @param[in] v	Displacement
+		 */
 		void Move(const f32v2& v);
 
+		/**
+		 * Combine 2 AABBs
+		 * @param[in] aabb	AABB to combine with
+		 */
 		void Combine(const AABB& aabb);
 
 		/**
 		 * Check whether 2 AABBs overlap
+		 * @param[in] aabb	AABB to check overlap with
 		 */
 		bool Overlaps(const AABB& aabb) const;
 
+		/**
+		 * Check whether another AABB is completely in the AABB
+		 * @param[in] aabb	AABB to check
+		 */
 		bool Contains(const AABB& aabb) const;
 
+		/**
+		 * Get the perimeter of the AABB
+		 * @return Perimeter
+		 */
 		f32 GetPerimeter() const;
 
 		/**
 		 * Pad the AABB (extend size)
-		 * @value	Value to pad with
+		 * @param[in] value	Value to pad with
 		 */
 		void Pad(f32 value);
 	};

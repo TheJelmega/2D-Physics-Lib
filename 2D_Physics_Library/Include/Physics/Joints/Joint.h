@@ -8,18 +8,18 @@ namespace P2D {
 	
 	struct JointDef
 	{
-		Body* pBody0;
-		Body* pBody1;
-		f32v2 pos0;
-		f32v2 pos1;
+		Body* pBody0; /**< Body 0, if nullptr, the joint is connected to the world*/
+		Body* pBody1; /**< Body 1*/
+		f32v2 pos0; /**< Relative position to body 0/world*/
+		f32v2 pos1; /**< Relative position to body 1*/
 	};
 
 	struct JointNode
 	{
-		Joint* pJoint;
-		Body* pOther;
-		JointNode* pNext;
-		JointNode* pPrev;
+		Joint* pJoint; /**< Joint*/
+		Body* pOther; /**< Other body, nullptr if connected to world*/
+		JointNode* pNext; /**< Next node*/
+		JointNode* pPrev; /**< Previous node*/
 	};
 
 	class Joint
@@ -28,9 +28,27 @@ namespace P2D {
 		Joint(const JointDef& def);
 		virtual ~Joint();
 
+		/**
+		 * Update the joint (used internally)
+		 */
 		virtual void Update(f32 dt);
 
+		/**
+		 * Check whether shapes of the parent bodies should collide
+		 * @return Whether shape should collide
+		 */
 		virtual bool DoShapesCollide();
+
+		/**
+		 * Get relative position to body 0/world
+		 * @return Relative position to body 0/world
+		 */
+		const f32v2& GetPos0() const { return m_Pos0; }
+		/**
+		 * Get relative position to body 1
+		 * @return Relative position to body 1
+		 */
+		const f32v2& GetPos1() const { return m_Pos1; }
 
 	protected:
 		friend class World;

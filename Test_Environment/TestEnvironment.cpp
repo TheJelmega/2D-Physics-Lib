@@ -4,6 +4,10 @@
 #include "Imgui/imgui_internal.h"
 #include "Imgui/imgui-SFML.h"
 #include "Scenes/StressTestScene.h"
+#include "Scenes/RaycastScene.h"
+#include "Scenes/JointScene.h"
+#include "Scenes/FrictionScene.h"
+#include "Scenes/RestitutionScene.h"
 
 
 TestEnvironment::TestEnvironment()
@@ -34,8 +38,12 @@ void TestEnvironment::Init(Context& context)
 		
 	context.draw.GetCamera().SetScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	m_SceneManager.AddScene(new TestScene());
+	//m_SceneManager.AddScene(new TestScene());
 	m_SceneManager.AddScene(new StressTestScene());
+	m_SceneManager.AddScene(new RaycastScene());
+	m_SceneManager.AddScene(new FrictionScene());
+	m_SceneManager.AddScene(new RestitutionScene());
+	m_SceneManager.AddScene(new JointScene());
 
 	m_SceneManager.Init(context);
 }

@@ -52,8 +52,6 @@ namespace P2D {
 
 	/**Value to fatten AABB with*/
 	constexpr f32 g_AABBExtension = 0.1f;
-	/**Used for AABBTree's move predicition*/
-	constexpr f32 g_AABBMultiplier = 2.f;
 
 	/**Max linear velocity of an object*/
 	constexpr f32 g_MaxLinearVelocity = 10'000.f;
@@ -61,9 +59,9 @@ namespace P2D {
 	constexpr f32 g_MaxAngulareVelocity = 10'000.f;
 
 	/**Max sleep linear velocity*/
-	constexpr f32 g_MaxSleepLinearVelocity = 0.2f;
+	constexpr f32 g_MaxSleepLinearVelocity = 0.1f;
 	/**Max sleep angular velocity*/
-	constexpr f32 g_MaxSleepAngularVelocity = 0.2f;
+	constexpr f32 g_MaxSleepAngularVelocity = 0.1f;
 	/**Time to sleep*/
 	constexpr f32 g_TimeToSleep = 0.5f;
 }

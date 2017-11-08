@@ -12,19 +12,19 @@ namespace P2D {
 
 	struct RaycastInput
 	{
-		f32v2 position;
-		f32v2 direction;
-		f32 length;
+		f32v2 position;		/**< Ray starting position*/
+		f32v2 direction;	/**< Ray direction*/
+		f32 length;			/**< Ray length*/
 
 		RaycastInput();
 	};
 
 	struct RaycastOutput
 	{
-		bool hit;
-		Shape* pShape;
-		f32 fraction;
-		f32v2 normal;
+		bool hit;		/**< Whether the ray hit*/
+		Shape* pShape;	/**< Shape the ray hit*/
+		f32 fraction;	/**< Fraction of ray length to hit*/
+		f32v2 normal;	/**< Normal at hit*/
 
 		RaycastOutput();
 	};

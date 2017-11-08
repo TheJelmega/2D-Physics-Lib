@@ -91,8 +91,6 @@ namespace P2D {
 		, m_pNextTouching(nullptr)
 		, m_pShape0(nullptr)
 		, m_pShape1(nullptr)
-		, m_Index0(0)
-		, m_Index1(0)
 		, m_Touching(false)
 		, m_CheckFilter(false)
 		, m_InSolver(false)
@@ -106,8 +104,6 @@ namespace P2D {
 		, m_pNextTouching(nullptr)
 		, m_pShape0(pShape0)
 		, m_pShape1(pShape1)
-		, m_Index0(-1)
-		, m_Index1(-1)
 		, m_Touching(false)
 		, m_CheckFilter(false)
 		, m_InSolver(false)
@@ -126,25 +122,11 @@ namespace P2D {
 
 		EventListener& eventListener = pWorld->GetEventListener();
 
+		Evaluate(m_Manifold);
+		m_Touching = m_Manifold.numPairs > 0;
+
 		if (sensor)
-		{
-			Evaluate(m_Manifold);
-
-			m_Touching = m_Manifold.numPairs > 0;
 			m_Manifold.numPairs = 0;
-		}
-		else
-		{
-			Evaluate(m_Manifold);
-
-			m_Touching = m_Manifold.numPairs > 0;
-
-			if (m_Touching)
-			{
-				m_Index0 = m_pShape0->GetBody()->GetSolverIndex();
-				m_Index1 = m_pShape1->GetBody()->GetSolverIndex();
-			}
-		}
 
 		if (m_Touching && !wasTouching)
 			eventListener.OnCollisionEnter(this);

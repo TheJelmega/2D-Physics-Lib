@@ -9,6 +9,7 @@ namespace P2D {
 		, m_OnCollisionLeave(nullptr)
 		, m_OnContactCreate(nullptr)
 		, m_OnContactDestroy(nullptr)
+		, m_PreSolve(nullptr)
 	{
 	}
 }

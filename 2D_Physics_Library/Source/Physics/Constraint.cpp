@@ -6,7 +6,7 @@ namespace P2D {
 
 	ConstraintDef::ConstraintDef()
 		: constrainRotation(false)
-		, constrainPositionToAxis(false)
+		, constrainPosition(false)
 		, pBody(nullptr)
 		, minAngle(0)
 		, maxAngle(0)
@@ -21,7 +21,7 @@ namespace P2D {
 		, m_pNext(nullptr)
 		, m_pPrev(nullptr)
 		, m_ConstrainRotation(def.constrainRotation)
-		, m_ConstrainPositionToAxis(def.constrainPositionToAxis)
+		, m_ConstrainPosition(def.constrainPosition)
 		, m_MinAngle(def.minAngle)
 		, m_MaxAngle(def.maxAngle)
 		, m_Axis(def.axis.Normalized())
@@ -60,7 +60,7 @@ namespace P2D {
 			}
 		}
 
-		if (m_ConstrainPositionToAxis)
+		if (m_ConstrainPosition)
 		{
 			f32v2 pos = m_pBody->m_Position;
 			f32 dot = m_Axis.Dot(pos - m_AxisPos);

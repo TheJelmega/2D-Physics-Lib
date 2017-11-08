@@ -27,10 +27,10 @@ namespace P2D {
 	 */
 	struct ContactNode
 	{
-		Contact* pContact;
-		Body* pOther;
-		ContactNode* pNext;
-		ContactNode* pPrev;
+		Contact* pContact;	/**< Contact*/
+		Body* pOther;		/**< Other body in contact*/
+		ContactNode* pNext;	/**< Next node*/
+		ContactNode* pPrev;	/**< Previous node*/
 
 		ContactNode();
 	};
@@ -39,19 +39,68 @@ namespace P2D {
 	{
 	public:
 		virtual ~Contact() = default;
+		/**
+		 * Create a contact (internal use only)
+		 */
 		static Contact* Create(Shape* pShape0, Shape* pShape1, BlockAllocator* pAlloc);
+		/**
+		* Destroy a contact (internal use only)
+		*/
 		static void Destroy(Contact* pContact, BlockAllocator* pAlloc);
 
+		/**
+		* Get the next contact
+		* @return	Next contact
+		*/
+		P2D_FORCE_INL const Contact* GetNext() const { return m_pNext; }
+		/**
+		* Get the previous contact
+		* @return	Previous contact
+		*/
+		P2D_FORCE_INL const Contact* GetPrev() const { return m_pPrev; }
+		/**
+		 * Get the next touching contact
+		 * @return	Next touching contact
+		 */
 		P2D_FORCE_INL const Contact* GetNextTouching() const { return m_pNextTouching; }
 
+		/**
+		 * Get shape 0 of the contact
+		 * @return Shape 0
+		 */
 		P2D_FORCE_INL Shape* GetShape0() { return m_pShape0; }
 		P2D_FORCE_INL const Shape* GetShape0() const { return m_pShape0; }
+		/**
+		 * Get shape 1 of the contact
+		 * @return Shape 1
+		 */
 		P2D_FORCE_INL Shape* GetShape1() { return m_pShape1; }
 		P2D_FORCE_INL const Shape* GetShape1() const { return m_pShape1; }
 
+		/**
+		 * Get the contact manifold
+		 * @return	Contact manifold
+		 */
 		P2D_FORCE_INL const Manifold& GetManifold() const { return m_Manifold; }
+		/**
+		 * Check whether the contact is touching
+		 * @return	Whether the contact is touching
+		 */
+		P2D_FORCE_INL bool IsTouching() const { return m_Touching; }
+		/**
+		* Check whether the contact is active
+		* @return	Whether the contact is active
+		*/
 		P2D_FORCE_INL bool IsActive() const { return m_Active; }
+		/**
+		 * Set whether to recheck the contact filter
+		 * @param[in] check	Whether to recheck the contact filter
+		 */
+		P2D_FORCE_INL void SetCheckFilter(bool check) { m_CheckFilter = check; }
 
+		/**
+		 * Evaluate the contact (internal use only)
+		 */
 		virtual void Evaluate(Manifold& manifold);
 
 	protected:
@@ -80,10 +129,6 @@ namespace P2D {
 
 		ContactNode m_Node0;
 		ContactNode m_Node1;
-
-		// Indices for chains
-		i32 m_Index0;
-		i32 m_Index1;
 
 		Manifold m_Manifold;
 

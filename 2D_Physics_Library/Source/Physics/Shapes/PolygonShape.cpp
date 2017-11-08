@@ -157,7 +157,7 @@ namespace P2D {
 		}
 	}
 
-	bool PolygonShape::CheckWinding()
+	bool PolygonShape::CheckWinding() const
 	{
 		for (u32 i = 0; i < m_NumPoints; ++i)
 		{

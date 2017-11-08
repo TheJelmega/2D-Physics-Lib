@@ -5,7 +5,7 @@ namespace P2D {
 	
 	struct FixedJointDef : JointDef
 	{
-		f32 angle;
+		f32 angle; /**Angle between 2 bodies*/
 
 		FixedJointDef();
 	};

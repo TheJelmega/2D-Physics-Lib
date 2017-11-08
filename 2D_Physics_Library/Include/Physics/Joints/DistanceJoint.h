@@ -5,8 +5,8 @@ namespace P2D {
 	
 	struct DistanceJointDef : JointDef
 	{
-		f32 distance;
-		f32 tolerance;
+		f32 distance;	/**< Distance between points*/
+		f32 tolerance;	/**< Distance tolerance*/
 
 		DistanceJointDef();
 	};
@@ -20,10 +20,27 @@ namespace P2D {
 		void Update(f32 dt) override;
 		bool DoShapesCollide() override;
 
-		P2D_FORCE_INL f32 GetDistance() const { return m_Distance; }
+		/**
+		 * Set the distance of the joint
+		 * @param[in] distance	Distance
+		 */
 		P2D_FORCE_INL void SetDistance(f32 distance) { m_Distance = distance; }
-		P2D_FORCE_INL f32 GetTolerance() const { return m_Tolerance; }
+		/**
+		 * Get the distance of the joint
+		 * @return	Joint distance
+		 */
+		P2D_FORCE_INL f32 GetDistance() const { return m_Distance; }
+		/**
+		 * Set the tolerance of the joint
+		 * @param[in] tolerance	Tolerance
+		 */
 		P2D_FORCE_INL void SetTolerance(f32 tolerance) { m_Tolerance = tolerance; }
+		/**
+		 * Get the tolerance of the joint
+		 * @return	Joint tolerance
+		 */
+		P2D_FORCE_INL f32 GetTolerance() const { return m_Tolerance; }
+		
 
 	private:
 		friend class World;

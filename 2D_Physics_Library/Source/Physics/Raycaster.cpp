@@ -24,7 +24,8 @@ namespace P2D {
 
 	void Raycaster::Raycast(const RaycastInput& input, RaycastOutput& output)
 	{
-		
+		output.hit = false;
+
 		f32v2 rayEnd = input.position + input.direction * input.length;
 
 		//Create an AABB for the ray
@@ -33,7 +34,7 @@ namespace P2D {
 		aabb.max.y = Math::Max(input.position.y, rayEnd.y);
 		aabb.min.x = Math::Min(input.position.x, rayEnd.x);
 		aabb.min.y = Math::Min(input.position.y, rayEnd.y);
-
+		aabb.Pad(g_AABBExtension);
 		//Quere shapes
 		Shape* pShape = nullptr;
 		m_pWorld->m_pBroadPhase->Query(aabb, pShape);
@@ -48,13 +49,13 @@ namespace P2D {
 				RayCastCircle(reinterpret_cast<CircleShape*>(pShape), input, temp);
 				break;
 			case Shape::Type::Polygon:
-				RayCastEdge(reinterpret_cast<EdgeShape*>(pShape), input, temp);
+				RayCastPolygon(reinterpret_cast<PolygonShape*>(pShape), input, temp);
 				break;
 			case Shape::Type::Edge:
-				RayCastChain(reinterpret_cast<ChainShape*>(pShape), input, temp);
+				RayCastEdge(reinterpret_cast<EdgeShape*>(pShape), input, temp);
 				break;
 			case Shape::Type::Chain:
-				RayCastPolygon(reinterpret_cast<PolygonShape*>(pShape), input, temp);
+				RayCastChain(reinterpret_cast<ChainShape*>(pShape), input, temp);
 				break;
 			default: ;
 			}
@@ -105,9 +106,9 @@ namespace P2D {
 		Body* pBody = pShape->m_pBody;
 
 		f32v2 v0 = pBody->m_Transform.Move(pShape->m_RelPos + pShape->m_V0);
-		f32v2 v1 = pBody->m_Transform.Move(pShape->m_RelPos + pShape->m_V0);
+		f32v2 v1 = pBody->m_Transform.Move(pShape->m_RelPos + pShape->m_V1);
 		f32v2 v0v1 = v1 - v0;
-		f32v2 rayEnd = input.position + input.direction + input.length;
+		f32v2 rayEnd = input.position + input.direction * input.length;
 		f32v2 dir = rayEnd - input.position;
 
 		f32 d = dir.Cross(v0v1);
@@ -121,9 +122,9 @@ namespace P2D {
 		f32 y = (pre * (v0.y - v1.y) - (input.position.y - rayEnd.y) * post) / d;
 
 		// Check if point is on lines
-		if (x < Math::Min(input.position.x, rayEnd.x) || x > Math::Max(input.position.x, rayEnd.x) || y < Math::Min(input.position.y, rayEnd.y) || y > Math::Max(input.position.y, rayEnd.y))
+		if (x < Math::Min(input.position.x, rayEnd.x) - Math::Epsilon<f32> || x > Math::Max(input.position.x, rayEnd.x) + Math::Epsilon<f32> || y < Math::Min(input.position.y, rayEnd.y) - Math::Epsilon<f32> || y > Math::Max(input.position.y, rayEnd.y) + Math::Epsilon<f32>)
 			return;
-		if (x < Math::Min(v0.x, v1.x) || x > Math::Max(v0.x, v1.x) || y < Math::Min(v0.y, v1.y) || y > Math::Max(v0.y, v1.y))
+		if (x < Math::Min(v0.x, v1.x) - Math::Epsilon<f32> || x > Math::Max(v0.x, v1.x) + Math::Epsilon<f32> || y < Math::Min(v0.y, v1.y) - Math::Epsilon<f32> || y > Math::Max(v0.y, v1.y) + Math::Epsilon<f32>)
 			return;
 
 		f32v2 point(x, y);
@@ -143,6 +144,7 @@ namespace P2D {
 		output.hit = false;
 		P2D::EdgeShapeDef def;
 		P2D::EdgeShape edge(def);
+		edge.m_pBody = pShape->m_pBody;
 
 		for (u32 i = 0, size = pShape->m_NumPoints - 1; i < size; ++i)
 		{
@@ -163,6 +165,9 @@ namespace P2D {
 		output.hit = false;
 
 		Body* pBody = pShape->m_pBody;
+
+		f32v2 rayEnd = input.position + input.direction * input.length;
+		f32v2 dir = rayEnd - input.position;
 		
 		//Check each edge
 		for (u32 i = 0; i < pShape->m_NumPoints; ++i)
@@ -174,8 +179,6 @@ namespace P2D {
 			f32v2 v0 = pBody->m_Transform.Move(pShape->m_RelPos + pShape->m_Points[i]);
 			f32v2 v1 = pBody->m_Transform.Move(pShape->m_RelPos + pShape->m_Points[i1]);
 			f32v2 v0v1 = v1 - v0;
-			f32v2 rayEnd = input.position + input.direction + input.length;
-			f32v2 dir = rayEnd - input.position;
 
 			f32 d = dir.Cross(v0v1);
 

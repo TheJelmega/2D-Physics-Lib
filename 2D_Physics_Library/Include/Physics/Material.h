@@ -3,15 +3,12 @@
 
 namespace P2D {
 	
-	/**
-	 * Material
-	 */
 	struct Material
 	{
-		f32 restitution;
-		f32 staticFriction;
-		f32 dynamicFriction;
-		f32 density;
+		f32 restitution;		/**< Restitution/bounciness*/
+		f32 staticFriction;		/**< static friction*/
+		f32 dynamicFriction;	/**< dynamic friction*/
+		f32 density;			/**< density*/
 
 		Material();
 	};

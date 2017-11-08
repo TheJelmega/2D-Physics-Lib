@@ -85,7 +85,7 @@ namespace P2D {
 		}
 	}
 
-	void BroadPhase::Query(const AABB& aabb, Shape* pOutShape)
+	void BroadPhase::Query(const AABB& aabb, Shape*& pOutShape)
 	{
 		pOutShape = nullptr;
 
@@ -108,7 +108,7 @@ namespace P2D {
 		Shape* pShape = nullptr;
 		for (u32 i = 0; i < m_ProxyCount; ++i)
 		{
-			pShape = static_cast<Shape*>(m_Tree.GetUserData(i));
+			pShape = static_cast<Shape*>(m_Tree.GetUserData(m_ProxyIds[i]));
 			pShape->m_pNextQueried = pOutShape;
 			pOutShape = pShape;
 		}

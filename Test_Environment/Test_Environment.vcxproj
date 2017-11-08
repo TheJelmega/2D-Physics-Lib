@@ -150,10 +150,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Scenes\RestitutionScene.cpp" />
+    <ClCompile Include="Scenes\FrictionScene.cpp" />
     <ClCompile Include="Imgui\imgui-SFML.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
+    <ClCompile Include="Scenes\JointScene.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Scenes\RaycastScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scenes\StressTestScene.cpp" />
@@ -163,6 +167,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Scenes\RestitutionScene.h" />
+    <ClInclude Include="Scenes\FrictionScene.h" />
     <ClInclude Include="Imgui\imconfig-SFML.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui-SFML.h" />
@@ -171,6 +177,8 @@
     <ClInclude Include="Imgui\stb_rect_pack.h" />
     <ClInclude Include="Imgui\stb_textedit.h" />
     <ClInclude Include="Imgui\stb_truetype.h" />
+    <ClInclude Include="Scenes\JointScene.h" />
+    <ClInclude Include="Scenes\RaycastScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scenes\StressTestScene.h" />

@@ -31,8 +31,10 @@ namespace P2D {
 		{
 			u8 lineShapeIndex; /**< Shape containing line segment*/
 			u32 lineIndex;
+			u32 pointIndex;
 			f32v2 point;
 			f32 penetration;
+			f32v2 normal;
 		};
 	};
 

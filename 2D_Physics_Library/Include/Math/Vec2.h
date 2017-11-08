@@ -67,11 +67,13 @@ namespace P2D {
 		T Length() const;
 		/**
 		 * Get the square length of the vector
+		 * @return Square length of the vector
 		 */
 		T SqLength() const;
 
 		/**
 		 * Get the distance between 2 vectors
+		 * @return	Distance between 2 vectors
 		 */
 		T Distance(const Vec2& v);
 		/**
@@ -82,14 +84,17 @@ namespace P2D {
 		/**
 		 * Get the dot product of 2 vectors
 		 * @param[in] v	Vec2
+		 * @return Dot product
 		 */
 		T Dot(const Vec2& v) const;
 		/**
 		 * Get the 2D cross product of 2 vector
+		 * @return	Cross product
 		 */
 		T Cross(const Vec2& v) const;
 		/**
 		 * Get the 2D cross product of a vector and a scalar (Z-axis)
+		 * @return	Cross product
 		 */
 		Vec2 Cross(T val) const;
 
@@ -103,32 +108,41 @@ namespace P2D {
 		Vec2& Normalize();
 		/**
 		 * Lerp between 2 vectors
+		 * @param[in] v			Other vector
+		 * @param[in] factor	Lerp factor
 		 */
 		Vec2 Lerp(const Vec2& v, T factor) const;
 
 		/**
 		 * Get the rotated vector
 		 * @param[in] angle	Angle to rotate by
+		 * @return Rotated vector
 		 */
 		Vec2 Rotated(T angle) const;
 		/**
 		* Rotate the vector (changes vector)
 		* @param[in] angle	Angle to rotate by
+		* @return Reference to the vector
 		*/
 		Vec2& Rotate(T angle);
 
 		/**
 		 * Rotate the vector around a point
+		 * @param[in] point	Point to rotate around
+		 * @param[in] angle	Angle to rotate by
+		 * @return Reference to the vector
 		 */
 		Vec2& RotateAroundPoint(const Vec2& point, T angle);
 		
 		/**
 		 * Get the angle of a vector
+		 * @return Angle
 		 */
 		T Angle() const;
 		/**
 		 * Get the angle between 2 vectors
 		 * @param[in] v	Vec2
+		 * @return	Angle between 2 vectors
 		 */
 		T Angle(const Vec2& v) const;
 
@@ -142,28 +156,16 @@ namespace P2D {
 		/**
 		 * Check if 2 vectors are the same
 		 * @param[in] v	Vec2
+		 * @return Whether 2 vectors are the same
 		 */
 		bool Equals(const Vec2& v) const;
 		/**
 		* Check if 2 vectors are the same, with an epsilon
 		* @param[in] v			Vec2
 		* @param[in] epsilon	Epsilon
+		* @return Whether 2 vectors are the same
 		*/
 		bool Equals(const Vec2& v, T epsilon) const;
-		/**
-		 * Check if a vector is in bounds
-		 * @param[in] topLeft		Top left corner
-		 * @param[in] bottomRight	Bottom Right corner
-		 */
-		bool IsInBounds(const Vec2& topLeft, const Vec2& bottomRight);
-		/**
-		* Check if a vector is in bounds
-		* @param[in] left	Left bound
-		* @param[in] top	Top bound
-		* @param[in] right	Right bound
-		* @param[in] bottom	Bottom bound
-		*/
-		bool IsInBounds(T left, T top, T right, T bottom);
 
 		// Constants
 		/** Zero vector */

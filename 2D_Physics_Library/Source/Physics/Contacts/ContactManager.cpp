@@ -133,6 +133,14 @@ namespace P2D {
 		Contact* pContact = m_pContactList;
 		while (pContact)
 		{
+			if (!m_pWorld->m_EventListener.PreSolve(pContact))
+			{
+				Contact* pNuke = pContact;
+				pContact = pContact->m_pNext;
+				Destroy(pNuke);
+				continue;
+			}
+
 			Shape* pShape0 = pContact->m_pShape0;
 			Shape* pShape1 = pContact->m_pShape1;
 

@@ -118,6 +118,7 @@ namespace P2D {
 				}
 			}
 		}
+		P2D_FREE(stack);
 	}
 
 }

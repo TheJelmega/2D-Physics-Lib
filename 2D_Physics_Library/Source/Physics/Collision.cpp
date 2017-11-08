@@ -403,8 +403,8 @@ namespace P2D {
 						PointLinePair& pair = polyPairs[numPolyPairs++];
 						pair.lineShapeIndex = 0;
 						pair.lineIndex = i;
+						pair.pointIndex = j;
 						pair.point = points1[j];
-						pair.penetration = dot;
 					}
 				}
 			}
@@ -423,14 +423,13 @@ namespace P2D {
 						if (dot > pair.penetration)
 						{
 							curPair.lineIndex = i;
-							curPair.penetration = dot;
 						}
 						else
 						{
 							curPair.lineIndex = pair.lineIndex;
-							curPair.penetration = pair.penetration;
 						}
 						curPair.point = pair.point;
+						curPair.pointIndex = pair.pointIndex;
 						++count;
 					}
 				}
@@ -456,8 +455,8 @@ namespace P2D {
 						PointLinePair& pair = polyPairs[numPolyPairs++];
 						pair.lineShapeIndex = 1;
 						pair.lineIndex = i;
+						pair.pointIndex = j;
 						pair.point = points0[j];
-						pair.penetration = dot;
 					}
 				}
 			}
@@ -476,15 +475,14 @@ namespace P2D {
 						if (dot > pair.penetration)
 						{
 							curPair.lineIndex = i;
-							curPair.penetration = dot;
 						}
 						else
 						{
 							curPair.lineIndex = pair.lineIndex;
-							curPair.penetration = pair.penetration;
 						}
 						curPair.lineShapeIndex = 1;
 						curPair.point = pair.point;
+						curPair.pointIndex = pair.pointIndex;
 						++count;
 					}
 				}
@@ -503,6 +501,38 @@ namespace P2D {
 			return;
 		}
 
+		//process pair penetrations
+		for (u32 i = 0; i < numPolyPairs; ++i)
+		{
+			PointLinePair& pair = polyPairs[i];
+			u32 numPoints = pair.lineShapeIndex == 0 ? pPoly0->m_NumPoints : pPoly1->m_NumPoints;
+			f32v2* points = pair.lineShapeIndex == 0 ? points0 : points1;
+			f32v2* normals = pair.lineShapeIndex == 0 ? normals0 : normals1;
+			f32v2* pnormals = pair.lineShapeIndex == 0 ? normals1 : normals0;
+			
+			u32 pn0 = pair.pointIndex;
+			u32 pn1 = pn0 == 0 ? numPoints - 1 : pn0 - 1;
+			f32v2 pointNormal = pnormals[pn0] + pnormals[pn1];
+
+			pair.penetration = std::numeric_limits<f32>::lowest();
+
+			for (u32 j = 0; j < numPoints; ++j)
+			{
+				f32v2 n = normals[j];
+				f32 ndot = n.Dot(pointNormal);
+				if (ndot > 0)
+					continue;
+
+				f32v2 dir = pair.point - points[j];
+				f32 pen = dir.Dot(n);
+				if (pen > pair.penetration)
+				{
+					pair.penetration = pen;
+					pair.normal = pair.lineShapeIndex == 0 ? n : -n;
+				}
+			}
+		}
+
 		//process pairs, find deepest penetrations
 		constexpr u32 maxPairs = 2;
 		PointLinePair* resultingPairs = static_cast<PointLinePair*>(pAlloc->Allocate(maxPairs * sizeof(PointLinePair)));
@@ -511,6 +541,16 @@ namespace P2D {
 		for (u32 i = 0; i < numPolyPairs; ++i)
 		{
 			PointLinePair& pair = polyPairs[i];
+			/*f32v2* normals = pair.lineShapeIndex == 0 ? normals1 : normals0;
+			u32 numPoints = pair.lineShapeIndex == 0 ? pPoly1->m_NumPoints : pPoly0->m_NumPoints;
+
+			u32 j0 = pair.lineIndex;
+			u32 j1 = (pair.pointIndex == 0 ? numPoints : j0) - 1;
+			f32v2 pointNormal = normals[j0] + normals[j1];
+			f32 dot = pointNormal.Dot(pair.normal);
+			if (dot > 0)
+				continue;*/
+
 			if (numResultingPairs > 0 && Math::Equals(pair.penetration, minPenetration))
 			{
 				if (numResultingPairs != maxPairs)

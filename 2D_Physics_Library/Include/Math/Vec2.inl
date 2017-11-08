@@ -355,18 +355,6 @@ namespace P2D {
 	}
 
 	template <typename T>
-	bool Vec2<T>::IsInBounds(const Vec2& topLeft, const Vec2& bottomRight)
-	{
-		return x >= topLeft.x && x <= bottomRight.x && y <= topLeft.y && y >= bottomRight.y;
-	}
-
-	template <typename T>
-	bool Vec2<T>::IsInBounds(T left, T top, T right, T bottom)
-	{
-		return x >= left && x <= right && x >= bottom && x <= top;
-	}
-
-	template <typename T>
 	Vec2<T> operator*(T val, const Vec2<T>& v)
 	{
 		return Vec2<T>(v.x * val, v.y * val);

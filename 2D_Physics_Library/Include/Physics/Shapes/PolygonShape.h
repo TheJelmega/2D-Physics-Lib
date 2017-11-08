@@ -7,8 +7,8 @@ namespace P2D {
 
 	struct PolygonShapeDef : ShapeDef
 	{
-		u32 numPoints;
-		f32v2* points;
+		u32 numPoints; /**< Number of points in the polygon*/
+		f32v2* points; /**< Points in the polygon*/
 
 		PolygonShapeDef();
 	};
@@ -19,7 +19,17 @@ namespace P2D {
 		PolygonShape(const PolygonShapeDef& def, BlockAllocator* pAlloc);
 		~PolygonShape() override;
 
+		/**
+		 * Set the polygon as a box
+		 * @param[in] width		Width of the box
+		 * @param[in] height	Height of the box
+		 */
 		void SetAsBox(f32 width, f32 height);
+		/**
+		 * Set the polygon as a regular polygon
+		 * @param[in] numSides	Number of sides of the polygon
+		 * @param[in] radius	Radius of the polygon
+		 */
 		void SetAsRegularPolygon(u32 numSides, f32 radius);
 			
 		void UpdateMass() override;
@@ -28,9 +38,21 @@ namespace P2D {
 		void UpdateAABB() override;
 		void SetRelPosition(const f32v2& relPos) override;
 
-		bool CheckWinding();
+		/**
+		 * Check whether the winding is in the correct order (CCW)
+		 * @return Whether the winding is correct
+		 */
+		bool CheckWinding() const;
 
+		/**
+		 * Get the points in the polygon
+		 * @return	Points in the polygon
+		 */
 		P2D_FORCE_INL u32 GetNumPoints() const { return m_NumPoints; }
+		/**
+		 * Get the number of points in the polygon
+		 * @return	Number of points in the polygon
+		 */
 		P2D_FORCE_INL const f32v2* GetPoints() const { return m_Points; }
 
 	private:

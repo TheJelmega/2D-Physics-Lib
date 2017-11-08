@@ -24,6 +24,8 @@ public:
 	bool DrawCollisionPoints() const { return m_DrawCollisionPoints; }
 	void DrawCollisionPoints(bool draw) { m_DrawCollisionPoints = draw; }
 
+	static constexpr f32 GetPhysicsRenderScale() { return m_PhysicsRenderScale; }
+
 private:
 	void Draw(const P2D::Body* pBody, const P2D::CircleShape* pShape) const;
 	void Draw(const P2D::Body* pBody, const P2D::EdgeShape* pShape) const;

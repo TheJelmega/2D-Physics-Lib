@@ -7,7 +7,7 @@ namespace P2D {
 
 	struct CircleShapeDef : ShapeDef
 	{
-		f32 radius;
+		f32 radius; /**< Radius of the circle*/
 
 		CircleShapeDef();
 	};
@@ -18,6 +18,10 @@ namespace P2D {
 		CircleShape(const CircleShapeDef& def);
 		~CircleShape() override;
 
+		/**
+		 * Get the radius of the circle
+		 * @return	Radius of the circle
+		 */
 		f32 GetRadius() const { return m_Radius; }
 
 		void UpdateMass() override;

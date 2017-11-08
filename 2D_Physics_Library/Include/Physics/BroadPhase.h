@@ -29,7 +29,7 @@ namespace P2D {
 		 * @note shapeArr needs to have enough capacity to store shapes
 		 * @param[out] pOutShape	First shape
 		 */
-		void Query(const AABB& aabb, Shape* pOutShape);
+		void Query(const AABB& aabb, Shape*& pOutShape);
 
 	private:
 		friend class AABBTree;
